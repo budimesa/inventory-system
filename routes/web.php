@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\MasterItemController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\IncomingItemController;
 use App\Http\Controllers\OutgoingItemController;
@@ -9,6 +10,8 @@ use App\Http\Controllers\ItemReportingController;
 use App\Http\Controllers\IncomingReportingController;
 use App\Http\Controllers\OutgoingReportingController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\AssetLoanController;
 use App\Http\Controllers\UserController;
 
 
@@ -44,10 +47,27 @@ Route::middleware('auth')->group(function () {
     Route::post('/delete-item/{id}', [ItemController::class, 'deleteItem'])->name('item.delete');
     Route::get('dropdown-item', [ItemController::class, 'getDropdownItem'])->name('item.dropdown');
 
+    Route::resource('master-items', MasterItemController::class);
+    Route::get('get-master-item-list', [MasterItemController::class, 'getMasterItemList'])->name('master-item.get-master-item-list');
+    Route::post('/update-master-item/{id}', [MasterItemController::class, 'updateMasterItem'])->name('master-item.update');
+    Route::post('/delete-master-item/{id}', [MasterItemController::class, 'deleteMasterItem'])->name('master-item.delete');
+    Route::get('dropdown-master-item', [MasterItemController::class, 'getDropdownMasterItem'])->name('master-item.dropdown');
+
+    Route::resource('employees', EmployeeController::class);
+    Route::get('get-dropdown-employee', [EmployeeController::class, 'getDropdownEmployee']);
+    Route::get('get-employee-list', [EmployeeController::class, 'getEmployeeList'])->name('employees.get-employees-list');
+    Route::post('update-employee/{id}', [EmployeeController::class, 'updateEmployee']);
+    Route::post('delete-employee/{id}', [EmployeeController::class, 'deleteEmployee']);
+
     Route::resource('incoming_items', IncomingItemController::class);
     Route::get('get-incoming-list', [IncomingItemController::class, 'getIncomingList'])->name('incoming.get-incoming-list');
     Route::post('/update-incoming-item/{id}', [IncomingItemController::class, 'updateIncoming'])->name('incoming.update');
     Route::post('/delete-incoming-item/{id}', [IncomingItemController::class, 'deleteIncoming'])->name('incoming.delete');
+
+    Route::resource('asset_loans', AssetLoanController::class);
+    Route::get('get-loan-list', [AssetLoanController::class, 'getLoanList'])->name('loan.get-loan-list');
+    Route::post('/update-loan-item/{id}', [AssetLoanController::class, 'updateLoan'])->name('loan.update');
+    Route::post('/delete-loan-item/{id}', [AssetLoanController::class, 'deleteLoan'])->name('incoming.delete');
 
     Route::resource('outgoing_items', OutgoingItemController::class);
     Route::get('get-outgoing-list', [OutgoingItemController::class, 'getOutgoingList'])->name('outgoing.get-outgoing-list');

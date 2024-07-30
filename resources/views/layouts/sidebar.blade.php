@@ -22,17 +22,24 @@
             data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Jenis Transaksi :</h6>
-                <a class="collapse-item @if(Request::is('incoming_items')) active @endif" href="{{ url('/incoming_items') }}">Barang Masuk</a>
-                <a class="collapse-item @if(Request::is('outgoing_items')) active @endif" href="{{ url('/outgoing_items') }}">Barang Keluar</a>                
+                {{-- <a class="collapse-item @if(Request::is('incoming_items')) active @endif" href="{{ url('/incoming_items') }}">Barang Masuk</a>
+                <a class="collapse-item @if(Request::is('outgoing_items')) active @endif" href="{{ url('/outgoing_items') }}">Barang Keluar</a>                 --}}
+                <a class="collapse-item @if(Request::is('incoming_items')) active @endif" href="{{ url('/incoming_items') }}">Peminjaman Barang</a>                
             </div>
         </div>
     </li>
 
     <!-- Nav Item - Charts -->
-    <li class="nav-item @if(Request::is('suppliers')) active @endif">
+    {{-- <li class="nav-item @if(Request::is('suppliers')) active @endif">
         <a class="nav-link" href="{{ url('/suppliers') }}">
             <i class="fas fa-briefcase"></i>
             <span>Supplier</span></a>
+    </li> --}}
+
+    <li class="nav-item @if(Request::is('employees')) active @endif">
+        <a class="nav-link" href="{{ url('/employees') }}">
+            <i class="fas fa-briefcase"></i>
+            <span>Karyawan</span></a>
     </li>
 
     <!-- Nav Item - Items -->
@@ -40,6 +47,12 @@
         <a class="nav-link" href="{{ url('/items') }}">
             <i class="fas fa-cube"></i>
             <span>Barang</span></a>
+    </li>
+
+    <li class="nav-item @if(Request::is('master-items')) active @endif">
+        <a class="nav-link" href="{{ url('/master-items') }}">
+            <i class="fas fa-cube"></i>
+            <span>Master Barang</span></a>
     </li>
 
     <!-- Nav Item - Reporting -->
