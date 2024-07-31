@@ -96,6 +96,7 @@
 
     @yield('addFormJS')
     @yield('editFormJS')
+    @yield('returnFormJS')
     @yield('deleteFormJS')
 </body>
 

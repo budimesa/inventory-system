@@ -45,7 +45,9 @@ class AssetLoanController extends Controller
                         <div class="g-2">
                         <a class="btn modal-effect text-primary btn-sm btn-edit" data-toggle="modal" href="#Umodaldemo8" data-toggle="tooltip" data-original-title="Edit" data-edit=\''.json_encode($row).'\'><span class="fas fa-edit text-success fs-14"></span></a>
                         <a class="btn modal-effect text-danger btn-sm" data-toggle="modal" href="#modalDemoDestroy" onclick=confirmDeleteItem(' . $row->id . ')><span class="fas fa-trash fs-14"></span></a>
+                        <a class="btn modal-effect text-primary btn-sm btn-return" data-toggle="modal" href="#Umodaldemo9" data-toggle="tooltip" data-original-title="Return" data-return=\''.json_encode($row).'\'><span class="fas fa-reply text-success fs-14"></span></a>
                         </div>
+                        
                     ';
                     return $buttons;
                 })
@@ -95,24 +97,6 @@ class AssetLoanController extends Controller
         // Method to show the edit form (optional)
     }
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'incoming_code' => 'required|string',
-            'item_code' => 'required|string',
-            'supplier_id' => 'required|string',
-            'quantity' => 'required|integer',
-            'incoming_date' => 'required|date',
-            'notes' => 'nullable|string',
-        ]);
-
-        $AssetLoan = AssetLoan::findOrFail($id);
-        $AssetLoan->update($request->all());
-
-        return redirect()->route('incoming_items.index')
-            ->with('success', 'Incoming item updated successfully.');
-    }
-
     public function updateLoan(Request $request, $id)
     {
         $AssetLoan = AssetLoan::findOrFail($id);
@@ -151,6 +135,35 @@ class AssetLoanController extends Controller
 
                 // Tambahkan ke tabel pivot
                 $AssetLoan->masterItems()->attach($newItemId);
+            }
+        }
+
+        return response()->json(['success' => 'Asset Loan updated successfully.']);
+    }
+
+    public function returnLoan(Request $request, $id)
+    {
+        $AssetLoan = AssetLoan::findOrFail($id);
+        $AssetLoan->update([
+            'notes'   => $request->notes,
+            'return_date'     => $request->return_date,
+            'received_by'   => $request->received_by,
+        ]);
+        // Ambil master_item_id lama sebelum diupdate
+        $oldItemIds = $AssetLoan->masterItems->pluck('id')->toArray();
+        $newItemIds = $request->master_item_id;
+
+        // Update data pinjaman
+
+         // Loop melalui master_item_id baru dan bandingkan dengan master_item_id lama
+        foreach ($newItemIds as $newItemId) {
+            if (in_array($newItemId, $oldItemIds)) {
+                $item = MasterItem::find($newItemId);
+                $item->stock += 1;
+                $item->save();
+            }
+            else {
+                
             }
         }
 

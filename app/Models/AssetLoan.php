@@ -9,7 +9,7 @@ class AssetLoan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['employee_id', 'item_id', 'borrow_date', 'item_id', 'planned_return_date', 'loan_reason', 'notes'];
+    protected $fillable = ['employee_id', 'item_id', 'borrow_date', 'item_id', 'planned_return_date', 'return_date', 'received_by', 'loan_reason', 'notes'];
 
     public function masterItems()
     {

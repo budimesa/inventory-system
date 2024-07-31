@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('asset_loans', AssetLoanController::class);
     Route::get('get-loan-list', [AssetLoanController::class, 'getLoanList'])->name('loan.get-loan-list');
     Route::post('/update-loan/{id}', [AssetLoanController::class, 'updateLoan'])->name('loan.update');
+    Route::post('/return-loan/{id}', [AssetLoanController::class, 'returnLoan'])->name('loan.return');
     Route::post('/delete-loan/{id}', [AssetLoanController::class, 'deleteLoan'])->name('loan.delete');
 
     Route::resource('outgoing_items', OutgoingItemController::class);

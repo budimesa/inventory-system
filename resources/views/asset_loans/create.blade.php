@@ -46,14 +46,6 @@
                         <label for="loan_reason" class="form-label">Alasan Pinjaman <span class="text-danger">*</span></label>
                         <input type="text" name="loan_reason" class="form-control" id="loan_reason">
                     </div>
-                    {{-- <div class="form-group">
-                        <label for="return_date" class="form-label">Tanggal Pengembalian <span class="text-danger">*</span></label>                        
-                        <input type="text" name="return_date" class="form-control" id="return_date" placeholder="">
-                    </div> --}}
-                    {{-- <div class="form-group">
-                        <label for="notes" class="form-label">Keterangan</label>
-                        <textarea name="notes" id="notes" class="form-control" rows="4"></textarea>
-                    </div> --}}
                 </form>
             </div>
             <div class="modal-footer">

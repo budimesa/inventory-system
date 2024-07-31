@@ -55,6 +55,7 @@
 
 @include('asset_loans.create')
 @include('asset_loans.edit')
+@include('asset_loans.return')
 @include('asset_loans.delete')
 
 @endsection
@@ -154,7 +155,6 @@
 
 
         $('#table-loan').on('click', '.btn-edit', function() {
-            
             var editData = $(this).data('edit');
             var selectedValues = editData.master_items.map(function(item) {
                 return item.id;
@@ -167,8 +167,21 @@
             $('#employeeId').val(editData.employee_id);
             $('#edit_loan_reason').val(editData.loan_reason);
             $('#edit_master_item_id').val(selectedValues).trigger('change');
-            // Menampilkan modal edit
-            $('#modalEdit').modal('show');
+        });
+
+        $('#table-loan').on('click', '.btn-return', function() {
+            var returnData = $(this).data('return');
+            var selectedValues = returnData.master_items.map(function(item) {
+                return item.id;
+            });
+            // // Mengisi nilai ke dalam form modal edit
+            $('#editId').val(returnData.id);
+            $('#return_division').val(returnData.division);
+            $('#return_employee').val(returnData.employee_name);
+            $('#return_borrow_date').val(returnData.borrow_date);
+            $('#return_planned_return_date').val(returnData.planned_return_date);
+            $('#return_loan_reason').val(returnData.loan_reason);
+            $('#return_master_item_id').val(selectedValues).trigger('change');
         });
 
 
