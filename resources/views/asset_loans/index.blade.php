@@ -1,25 +1,48 @@
+<style>
+/* Tambahkan CSS ini ke file CSS Anda */
+.dataTables_wrapper .dataTables_scroll .dataTables_scrollBody {
+    overflow-x: auto;
+}
+/* Gaya untuk kolom fixed */
+.dataTables_wrapper .dataTables_scroll .dataTables_scrollBody table td:last-child,
+.dataTables_wrapper .dataTables_scroll .dataTables_scrollBody table th:last-child {
+    position: sticky;
+    right: 0;
+    background-color: #fff; /* Atur warna latar belakang sesuai kebutuhan */
+    z-index: 1; /* Atur z-index untuk memastikan kolom tetap di atas */
+}
+
+/* Menyembunyikan scrollbar horizontal dari container lain */
+.dataTables_wrapper {
+    overflow-x: hidden;
+}
+
+</style>
 @extends('layouts.app')
 
 @section('content')
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Transaksi Barang Masuk</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Transaksi Peminjaman Barang</h6>
     </div>
     <div class="card-body">
         <div>
-            <a class="modal-effect btn btn-primary mb-3" data-toggle="modal" data-target="#modalAdd">Tambah Barang Masuk</a>
+            <a class="modal-effect btn btn-primary mb-3" data-toggle="modal" data-target="#modalAdd">Tambah Transaksi Baru</a>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered" id="table-incoming" width="100%" cellspacing="0">
+            <table class="table table-bordered" id="table-loan" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Incoming Code</th>
-                        <th>Item Code</th>
-                        <th>Supplier Name</th>
-                        <th>Quantity</th>
-                        <th>Incoming Date</th>
-                        <th>Notes</th>
+                        <th>Nama Karyawan</th>
+                        <th>Divisi</th>
+                        <th>Nama Barang</th>
+                        <th>Tanggal Pinjam</th>
+                        <th>Rencana Tanggal Pengembalian</th>
+                        <th>Alasan Pinjam</th>
+                        <th>Tanggal Pengembalian</th>
+                        <th>Keterangan</th>
+                        <th>Diterima Oleh</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -47,7 +70,7 @@
         var table;
         $(document).ready(function() {
             //datatables
-            table = $('#table-incoming').DataTable({
+            table = $('#table-loan').DataTable({
 
                 "processing": true,
                 "serverSide": true,
@@ -63,7 +86,7 @@
                 lengthChange: true,
 
                 "ajax": {
-                    "url": "{{ route('incoming.get-incoming-list') }}",
+                    "url": "{{ route('loan.get-loan-list') }}",
                 },
 
                 "columns": [{
@@ -72,29 +95,40 @@
                         searchable: false
                     },
                     {
-                        data: 'incoming_code',
-                        name: 'incoming_code',
+                        data: 'employee_name',
+                        name: 'employee_name',
                     },
                     {
-                        data: 'item_code',
-                        name: 'item_code',
+                        data: 'division',
+                        name: 'division',
                     },
                     {
-                        data: 'supplier_name',
-                        name: 'supplier_name',
-                    },
-                    
-                    {
-                        data: 'quantity',
-                        name: 'quantity',
+                        data: 'item_details',
+                        name: 'item_details',
                     },
                     {
-                        data: 'incoming_date',
-                        name: 'incoming_date',
+                        data: 'borrow_date',
+                        name: 'borrow_date',
+                    },
+                    {
+                        data: 'planned_return_date',
+                        name: 'planned_return_date',
+                    },
+                    {
+                        data: 'loan_reason',
+                        name: 'loan_reason',
+                    },
+                    {
+                        data: 'return_date',
+                        name: 'return_date',
                     },
                     {
                         data: 'notes',
                         name: 'notes',
+                    },
+                    {
+                        data: 'received_by',
+                        name: 'received_by',
                     },
                     {
                         data: 'action',
@@ -104,26 +138,35 @@
                     },
                 ],
 
+            // FixedColumns settings
+            "scrollX": true,
+            "scrollY": "400px",
+            "scrollCollapse": true,
+            "paging": true,
+            });
+
+             // Inisialisasi FixedColumns
+            new $.fn.dataTable.FixedColumns(table, {
+                leftColumns: 0, // Menentukan jumlah kolom yang akan tetap terlihat di sebelah kiri
+                rightColumns: 1 // Menentukan jumlah kolom yang akan tetap terlihat di sebelah kanan
             });
         });
 
 
-        $('#table-incoming').on('click', '.btn-edit', function() {
+        $('#table-loan').on('click', '.btn-edit', function() {
             
             var editData = $(this).data('edit');
-            const incomingDate = new Date(editData.incoming_date);
-            const formattedDate = incomingDate.toISOString().split('T')[0];
-            
-            // Mengisi nilai ke dalam form modal edit
-            $('#editItemId').val(editData.id);
-            $('#editIncomingCode').val(editData.incoming_code);
-            $('#editItemCode').val(editData.item_code);
-            $('#editName').val(editData.item_code); // Sesuaikan dengan nama atribut di data edit
-            $('#editSupplier').val(editData.supplier_id); // Sesuaikan dengan nama atribut di data edit
-            $('#editQuantity').val(editData.quantity);
-            $('#editIncomingDate').val(formattedDate);
-            $('#editNotes').val(editData.notes);
-
+            var selectedValues = editData.master_items.map(function(item) {
+                return item.id;
+            });
+            // // Mengisi nilai ke dalam form modal edit
+            $('#editId').val(editData.id);
+            $('#edit_borrow_date').val(editData.borrow_date);
+            $('#edit_planned_return_date').val(editData.planned_return_date);
+            $('#editDivision').val(editData.division).trigger('change');
+            $('#employeeId').val(editData.employee_id);
+            $('#edit_loan_reason').val(editData.loan_reason);
+            $('#edit_master_item_id').val(selectedValues).trigger('change');
             // Menampilkan modal edit
             $('#modalEdit').modal('show');
         });
@@ -131,7 +174,7 @@
 
         
          function destroy(data) {
-            $("input[name='incoming_id']").val(data);
+            $("input[name='loan_id']").val(data);
         }
 </script>
 @endpush

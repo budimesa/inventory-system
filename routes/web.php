@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::get('dropdown-master-item', [MasterItemController::class, 'getDropdownMasterItem'])->name('master-item.dropdown');
 
     Route::resource('employees', EmployeeController::class);
+    Route::get('/employees-by-division/{division}', [EmployeeController::class, 'getEmployeesByDivision']);
     Route::get('get-dropdown-employee', [EmployeeController::class, 'getDropdownEmployee']);
     Route::get('get-employee-list', [EmployeeController::class, 'getEmployeeList'])->name('employees.get-employees-list');
     Route::post('update-employee/{id}', [EmployeeController::class, 'updateEmployee']);
@@ -66,8 +67,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('asset_loans', AssetLoanController::class);
     Route::get('get-loan-list', [AssetLoanController::class, 'getLoanList'])->name('loan.get-loan-list');
-    Route::post('/update-loan-item/{id}', [AssetLoanController::class, 'updateLoan'])->name('loan.update');
-    Route::post('/delete-loan-item/{id}', [AssetLoanController::class, 'deleteLoan'])->name('incoming.delete');
+    Route::post('/update-loan/{id}', [AssetLoanController::class, 'updateLoan'])->name('loan.update');
+    Route::post('/delete-loan/{id}', [AssetLoanController::class, 'deleteLoan'])->name('loan.delete');
 
     Route::resource('outgoing_items', OutgoingItemController::class);
     Route::get('get-outgoing-list', [OutgoingItemController::class, 'getOutgoingList'])->name('outgoing.get-outgoing-list');

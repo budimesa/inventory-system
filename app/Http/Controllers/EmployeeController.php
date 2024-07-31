@@ -23,6 +23,12 @@ class EmployeeController extends Controller
         return response()->json($employees);
     }
 
+    public function getEmployeesByDivision($division)
+    {
+        $employees = Employee::where('division', $division)->get();
+        return response()->json($employees);
+    }
+
     public function getEmployeeList(Request $request)
     {
         if ($request->ajax()) {

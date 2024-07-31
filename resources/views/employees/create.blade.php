@@ -130,7 +130,7 @@
         function resetForm() {
             resetValid();
             $("input[name='employee_name']").val('');
-            $("select[name='division']").val('');
+            $("select[name='division']").val(null).trigger('change');
             $("input[name='phone']").val('');
             setLoading(false);
         }

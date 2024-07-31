@@ -13,16 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('asset_loans', function (Blueprint $table) {
+        Schema::create('asset_loan_master_item', function (Blueprint $table) {
             $table->id();
-            $table->string('employee_id');
-            $table->date('borrow_date');
-            $table->date('planned_return_date');
-            $table->text('loan_reason');
-            $table->date('return_date')->nullable();
-            $table->string('received_by')->nullable();
-            $table->text('notes')->nullable();
+            $table->unsignedBigInteger('asset_loan_id');
+            $table->unsignedBigInteger('master_item_id');
             $table->timestamps();
+
+            $table->foreign('asset_loan_id')->references('id')->on('asset_loans')->onDelete('cascade');
+            $table->foreign('master_item_id')->references('id')->on('master_items')->onDelete('cascade');
         });
     }
 
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asset_loans');
+        Schema::dropIfExists('asset_loan_master_item');
     }
 };

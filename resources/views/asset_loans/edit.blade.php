@@ -3,51 +3,49 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title">Ubah Barang Masuk</h6>
+                <h6 class="modal-title">Ubah Transaksi</h6>
                 <button aria-label="Close" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <form id="editForm">
-                    <input type="hidden" name="id" id="editItemId">
+                    <input type="hidden" name="id" id="editId">
+                    <input type="hidden" name="employeeId" id="employeeId">
                     <div class="form-group">
-                        <label for="editIncomingCode" class="form-label">Kode Barang Masuk</label>
-                        <input type="text" name="incoming_code" class="form-control" id="editIncomingCode" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="editIncomingDate" class="form-label">Tanggal Masuk Barang</label>
-                        <input type="text" name="incoming_date" class="form-control" id="editIncomingDate" placeholder="">
-                    </div>
-                    <div class="form-group">
-                        <label for="editItemCode" class="form-label">Kode Barang</label>
-                        <input type="text" name="item_code" class="form-control" id="editItemCode" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="editName" class="form-label">Nama Barang</label>
-                        <select name="name" id="editName" class="form-control" disabled>
-                            <option value="" disabled>Pilih Nama Barang</option>
-                            @foreach($items as $item)
-                                <option value="{{ $item->item_code }}">{{ $item->name }}</option>
+                        <label for="editDivision" class="form-label">Divisi <span class="text-danger">*</span></label>
+                        <select name="editDivision" id="editDivision" class="form-control select2">
+                            <option value="" disabled selected>Pilih Divisi</option>
+                            @foreach($divisions as $division)
+                            <option value="{{ $division->division }}">{{ $division->division }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="editSupplier" class="form-label">Nama Supplier</label>
-                        <select name="supplier" id="editSupplier" class="form-control">
-                            <option value="" disabled>Pilih Supplier</option>
-                            @foreach($suppliers as $supplier)
-                                <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                        <label for="editEmployee" class="form-label">Nama Karyawan <span class="text-danger">*</span></label>
+                        <select name="editEmployee" id="editEmployee" class="form-control select2">
+                            <option value="" disabled selected>Pilih Karyawan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_borrow_date" class="form-label">Tanggal Pinjam Barang <span class="text-danger">*</span></label>                        
+                        <input type="text" name="edit_borrow_date" class="form-control" id="edit_borrow_date" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_planned_return_date" class="form-label">Tanggal Rencana Pengembalian <span class="text-danger">*</span></label>                        
+                        <input type="text" name="edit_planned_return_date" class="form-control" id="edit_planned_return_date" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_master_item_id" class="form-label">Nama Barang <span class="text-danger">*</span></label>
+                        <select name="edit_master_item_id[]" id="edit_master_item_id" class="form-control select2" multiple="multiple">
+                            @foreach($master_items as $master_item)
+                            <option value="{{ $master_item->id }}">{{ $master_item->item_name .' - '. $master_item->item_type }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="editQuantity" class="form-label">Quantity</label>
-                        <input type="number" name="quantity" min="0" id="editQuantity" class="form-control" placeholder="">
-                    </div>
-                    <div class="form-group">
-                        <label for="editNotes" class="form-label">Keterangan</label>
-                        <input type="text" name="editNotes" class="form-control" id="editNotes">
+                        <label for="edit_loan_reason" class="form-label">Alasan Pinjaman <span class="text-danger">*</span></label>
+                        <input type="text" name="edit_loan_reason" class="form-control" id="edit_loan_reason">
                     </div>
                 </form>
             </div>
@@ -65,48 +63,99 @@
 
 @section('editFormJS')
 <script>
-    // Handle selection change event
-    $('#Umodaldemo8').on('show.bs.modal', function(event) {
-        $('#editIncomingDate').datepicker({
+
+    $(document).ready(function() {
+        $('.select2').select2({
+            width: '100%' // Mengatur lebar dropdown Select2 menjadi 100%
+        });
+
+        $('#editDivision').change(function() {
+            var division = $(this).val();
+            if(division) {
+                $.ajax({
+                    url: '/employees-by-division/' + division,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#editEmployee').prop('disabled', false);
+                        $('#editEmployee').empty();
+                        $('#editEmployee').append('<option value="" disabled selected>Pilih Karyawan</option>');
+                        $.each(data, function(key, value) {
+                            $('#editEmployee').append('<option value="' + value.id + '">' + value.employee_name + '</option>');
+                        });
+                        var employeeId = $('#employeeId').val();
+                        $('#editEmployee').val(employeeId).trigger('change')
+                    }
+                });
+            } else {
+                $('#editEmployee').prop('disabled', true);
+                $('#editEmployee').empty();
+                $('#editEmployee').append('<option value="" disabled selected>Pilih Karyawan</option>');
+            }
+        });
+    });
+
+    $('#Umodaldemo8').on('show.bs.modal', function(event) {        
+
+        $('#edit_borrow_date').datepicker({
             format: 'yyyy-mm-dd',
             autoclose: true,
             todayHighlight: true
         });
-    });
+
+        $('#edit_planned_return_date').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true
+        });
+
+        });
 
     function checkEditForm() {
-        const itemCode = $("#editItemCode").val();
-        const supplier = $("#editSupplier").val();
-        const quantity = $("#editQuantity").val();
-        const incomingDate = $("#editIncomingDate").val();
-        const notes = $("#editNotes").val();
+        const edit_division = $("#editDivision").val();
+        const edit_employee = $("#editEmployee").val();
+        const edit_borrow_date = $("input[name='edit_borrow_date']").val();
+        const edit_planned_return_date = $("input[name='edit_planned_return_date']").val();
+        const edit_master_item_id = $("#edit_master_item_id").val();
+        const edit_loan_reason = $("input[name='edit_loan_reason']").val();
 
         setLoadingEdit(true);
         resetValidEdit();
 
-        if (supplier == null) {
-            validate('Supplier wajib di isi!', 'warning');
-            $("#editSupplier").addClass('is-invalid');
-            setLoadingEdit(false);
+        if (edit_division == null) {
+            validate('Nama Divisi wajib di isi!', 'warning');
+            $("#editDivision").addClass('is-invalid');
+            setLoading(false);
             return false;
         }
-        else if (incomingDate == "") {
+        else if (edit_employee == null) {
+            validate('Nama Karyawan wajib di isi!', 'warning');
+            $("#editEmployee").addClass('is-invalid');
+            setLoading(false);
+            return false;
+        }
+        else if (edit_master_item_id == null) {
+            validate('Nama Barang wajib di isi!', 'warning');
+            $("#edit_master_item_id").addClass('is-invalid');
+            setLoading(false);
+            return false;
+        }
+        else if (edit_borrow_date == "") {
             validate('Tanggal Masuk Barang Wajib di isi!', 'warning');
-            $("#editIncomingDate").addClass('is-invalid');
-            setLoadingEdit(false);
+            $("input[name='edit_borrow_date']").addClass('is-invalid');
+            setLoading(false);
             return false;
         }
-        else if (itemCode == "") {
-            validate('Kode Barang wajib di isi!', 'warning');
-            $("#editItemCode").addClass('is-invalid');
-            setLoadingEdit(false);
+        else if (edit_planned_return_date == "") {
+            validate('Tanggal Masuk Barang Wajib di isi!', 'warning');
+            $("input[name='edit_planned_return_date']").addClass('is-invalid');
+            setLoading(false);
             return false;
         }
-
-        else if (quantity == "") {
-            validate('Quantity wajib di isi!', 'warning');
-            $("#editQuantity").addClass('is-invalid');
-            setLoadingEdit(false);
+        else if (edit_loan_reason == "") {
+            validate('Alasan Pinjam wajib di isi!', 'warning');
+            $("input[name='edit_loan_reason']").addClass('is-invalid');
+            setLoading(false);
             return false;
         }
         else {
@@ -115,32 +164,44 @@
     }
 
     function resetValidEdit() {
-        $("#editItemCode").removeClass('is-invalid');
-        $("#editSupplier").removeClass('is-invalid');
-        $("#editQuantity").removeClass('is-invalid');
-        $("#editIncomingDate").removeClass('is-invalid');
+        $("input[name='edit_borrow_date']").removeClass('is-invalid')
+        $("input[name='edit_planned_return_date']").removeClass('is-invalid')
+        $("select[name='editDivision']").removeClass('is-invalid');
+        $("select[name='editEmployee']").removeClass('is-invalid')
+        $("input[name='edit_loan_reason']").removeClass('is-invalid')
+        $("select[name='edit_master_item_id']").removeClass('is-invalid')
     }
 
+    
+    function resetEditForm() {
+        resetValidEdit();
+        $("input[name='edit_borrow_date']").val('');
+        $("input[name='edit_planned_return_date']").val('');
+        $("select[name='editDivision']").val(null).trigger('change');
+        $("select[name='editEmployee']").val(null).trigger('change');
+        $("input[name='edit_loan_reason']").val('');
+        $('#edit_master_item_id').val(null).trigger('change');
+        setLoadingEdit(false);
+    }
+    
     function submitEditForm() {
         const id = $("input[name='id']").val();
-        const incomingCode = $("#editIncomingCode").val();
-        const itemCode = $("#editItemCode").val();
-        const supplier = $("#editSupplier").val();
-        const quantity = $("#editQuantity").val();
-        const incomingDate = $("#editIncomingDate").val();
-        const notes = $("#editNotes").val();
+        const edit_borrow_date = $("input[name='edit_borrow_date']").val();
+        const edit_planned_return_date = $("input[name='edit_planned_return_date']").val();
+        const edit_employee = $("select[name='editEmployee']").val();
+        const edit_loan_reason = $("input[name='edit_loan_reason']").val();
+        const edit_master_item_id = $("#edit_master_item_id").val();
         
         $.ajax({
             type: 'POST',
-            url: `/update-incoming-item/${id}`,
+            url: `/update-loan/${id}`,
             enctype: 'multipart/form-data',
             data: {
-                item_code: itemCode,
-                supplier_id: supplier,
-                quantity: quantity,
-                incoming_code: incomingCode,
-                incoming_date: incomingDate,
-                notes: notes,
+                employee_id: edit_employee,
+                borrow_date: edit_borrow_date,
+                planned_return_date: edit_planned_return_date,
+                loan_reason: edit_loan_reason,
+                master_item_id: edit_master_item_id,
                 _token: "{{ csrf_token() }}"
             },
             success: function(data) {
@@ -164,19 +225,6 @@
                 });
             }
         });
-    }
-
-    function resetEditForm() {
-        resetValidEdit();
-        $('#editItemId').val('');
-        $('#editIncomingCode').val('');
-        $('#editItemCode').val('');
-        $('#editName').val('');
-        $('#editSupplier').val('');
-        $('#editQuantity').val('');
-        $('#editIncomingDate').val('');
-        $('#editNotes').val('');
-        setLoadingEdit(false);
     }
 
     function setLoadingEdit(bool) {

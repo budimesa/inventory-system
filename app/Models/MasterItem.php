@@ -10,4 +10,9 @@ class MasterItem extends Model
     use HasFactory;
 
     protected $fillable = ['item_type','item_name', 'description', 'stock'];
+
+    public function assetLoans()
+    {
+        return $this->belongsToMany(AssetLoan::class, 'asset_loan_master_item');
+    }
 }
