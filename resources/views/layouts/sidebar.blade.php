@@ -12,33 +12,36 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item @if(Request::is('incoming_items') || Request::is('outgoing_items')) active @endif">
+    <li class="nav-item @if(Request::is('asset_loans') || Request::is('problematic-items')) active @endif">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
             aria-controls="collapsePages">
             <i class="fas fa-exchange-alt"></i>
             <span>Transaksi</span>
         </a>
-        <div id="collapsePages" class="collapse @if(Request::is('incoming_items') || Request::is('outgoing_items')) show @endif" aria-labelledby="headingPages"
+        <div id="collapsePages" class="collapse @if(Request::is('asset_loans') || Request::is('problematic-items')) show @endif" aria-labelledby="headingPages"
             data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Jenis Transaksi :</h6>
-                {{-- <a class="collapse-item @if(Request::is('incoming_items')) active @endif" href="{{ url('/incoming_items') }}">Barang Masuk</a>
-                <a class="collapse-item @if(Request::is('outgoing_items')) active @endif" href="{{ url('/outgoing_items') }}">Barang Keluar</a>                 --}}
                 <a class="collapse-item @if(Request::is('asset_loans')) active @endif" href="{{ url('/asset_loans') }}">Peminjaman Barang</a>                
+                <a class="collapse-item @if(Request::is('problematic-items')) active @endif" href="{{ url('/problematic-items') }}">Barang Bermasalah</a>
             </div>
         </div>
     </li>
 
-    <li class="nav-item @if(Request::is('employees')) active @endif">
-        <a class="nav-link" href="{{ url('/employees') }}">
-            <i class="fas fa-briefcase"></i>
-            <span>Karyawan</span></a>
-    </li>
-
-    <li class="nav-item @if(Request::is('master-items')) active @endif">
-        <a class="nav-link" href="{{ url('/master-items') }}">
-            <i class="fas fa-cube"></i>
-            <span>Master Barang</span></a>
+    <li class="nav-item @if(Request::is('employees') || Request::is('master-items')) active @endif">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages3" aria-expanded="true"
+            aria-controls="collapsePages3">
+            <i class="fas fa-list"></i>
+            <span>Master</span>
+        </a>
+        <div id="collapsePages3" class="collapse @if(Request::is('employees') || Request::is('master-items')) show @endif" aria-labelledby="headingPages"
+            data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Master :</h6>
+                <a class="collapse-item @if(Request::is('employees')) active @endif" href="{{ url('/employees') }}">Master Karyawan</a>
+                <a class="collapse-item @if(Request::is('master-items')) active @endif" href="{{ url('/master-items') }}">Master Barang</a>
+            </div>
+        </div>
     </li>
 
     <!-- Nav Item - Reporting -->

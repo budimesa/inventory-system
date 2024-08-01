@@ -10,7 +10,7 @@
             </div>
             <div class="modal-body">
                 <form id="editForm">
-                    <input type="hidden" name="id" id="return_id">
+                    <input type="hidden" name="id" id="returnId">
                     <input type="hidden" value="{{ Auth::user()->name }}" name="received_by" id="received_by">
                     <div class="form-group">
                         <label for="return_division" class="form-label">Nama Divisi<span class="text-danger">*</span></label>
@@ -24,21 +24,10 @@
                         <label for="return_borrow_date" class="form-label">Tanggal Pinjam Barang <span class="text-danger">*</span></label>                        
                         <input type="text" name="return_borrow_date" class="form-control" id="return_borrow_date" placeholder="" readonly>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="return_planned_return_date" class="form-label">Tanggal Rencana Pengembalian <span class="text-danger">*</span></label>                        
-                        <input type="text" name="return_planned_return_date" class="form-control" id="return_planned_return_date" placeholder="" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="return_master_item_id" class="form-label">Nama Barang <span class="text-danger">*</span></label>
-                        <select name="return_master_item_id[]" id="return_master_item_id" class="form-control select2" multiple="multiple">
-                            @foreach($master_items as $master_item)
-                            <option value="{{ $master_item->id }}">{{ $master_item->item_name .' - '. $master_item->item_type }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="return_loan_reason" class="form-label">Alasan Pinjaman <span class="text-danger">*</span></label>
-                        <input type="text" name="return_loan_reason" class="form-control" id="return_loan_reason" readonly>
+                        <label for="item_name" class="form-label">Nama Barang <span class="text-danger">*</span></label>
+                        <input type="text" name="item_name" class="form-control" id="item_name" readonly>
                     </div>
                     <div class="form-group">
                         <label for="return_date" class="form-label">Tanggal Pengembalian <span class="text-danger">*</span></label>                        
@@ -82,15 +71,13 @@
     });
 
     function checkReturnForm() {
-        
-        const return_master_item_id = $("#return_master_item_id").val();
-        const notes = $("input[name='notes']").val();
+        const return_date = $("input[name='return_date']").val();
 
         setLoadingReturn(true);
         resetValidReturn();
 
-        if (notes == "") {
-            validate('Alasan Pinjam wajib di isi!', 'warning');
+        if (return_date == "") {
+            validate('Tanggal pengembalian wajib di isi!', 'warning');
             $("input[name='notes']").addClass('is-invalid');
             setLoading(false);
             return false;
@@ -124,18 +111,14 @@
     function submitReturnForm() {
         const id = $("input[name='id']").val();
         const return_date = $("input[name='return_date']").val();
-        const received_by = $("input[name='received_by']").val();
         const notes = $("textarea[name='notes']").val();
-        const return_master_item_id = $("#return_master_item_id").val();
         $.ajax({
             type: 'POST',
-            url: `/return-loan/${id}`,
+            url: `/return-problematic-item/${id}`,
             enctype: 'multipart/form-data',
             data: {
                 return_date: return_date,
                 notes: notes,
-                received_by: received_by,
-                master_item_id: return_master_item_id,
                 _token: "{{ csrf_token() }}"
             },
             success: function(data) {

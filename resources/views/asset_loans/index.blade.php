@@ -175,7 +175,7 @@
                 return item.id;
             });
             // // Mengisi nilai ke dalam form modal edit
-            $('#editId').val(returnData.id);
+            $('#return_id').val(returnData.id);
             $('#return_division').val(returnData.division);
             $('#return_employee').val(returnData.employee_name);
             $('#return_borrow_date').val(returnData.borrow_date);

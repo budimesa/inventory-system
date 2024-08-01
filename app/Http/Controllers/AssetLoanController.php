@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AssetLoan;
 use App\Models\MasterItem;
+use App\Models\ProblematicItem;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -73,7 +74,7 @@ class AssetLoanController extends Controller
             'loan_reason' => $request->loan_reason,
         ]);
     
-        $assetLoan->masterItems()->attach($request->item_id);
+        $assetLoan->masterItems()->attach($request->master_item_id);
     
         foreach ($request->master_item_id as $itemId) {
             $item = MasterItem::find($itemId);
@@ -143,6 +144,7 @@ class AssetLoanController extends Controller
 
     public function returnLoan(Request $request, $id)
     {
+        
         $AssetLoan = AssetLoan::findOrFail($id);
         $AssetLoan->update([
             'notes'   => $request->notes,
@@ -150,21 +152,24 @@ class AssetLoanController extends Controller
             'received_by'   => $request->received_by,
         ]);
         // Ambil master_item_id lama sebelum diupdate
-        $oldItemIds = $AssetLoan->masterItems->pluck('id')->toArray();
-        $newItemIds = $request->master_item_id;
+        $originalItemIds = $AssetLoan->masterItems->pluck('id')->toArray();
+        $returnedItemIds = $request->master_item_id;
 
-        // Update data pinjaman
+        foreach ($returnedItemIds as $itemId) {
+            $item = MasterItem::find($itemId);
+            $item->stock += 1;
+            $item->save();
 
-         // Loop melalui master_item_id baru dan bandingkan dengan master_item_id lama
-        foreach ($newItemIds as $newItemId) {
-            if (in_array($newItemId, $oldItemIds)) {
-                $item = MasterItem::find($newItemId);
-                $item->stock += 1;
-                $item->save();
-            }
-            else {
-                
-            }
+            // $AssetLoan->masterItems()->detach($itemId);
+        }
+
+        // Tangani item yang tidak dikembalikan
+        $notReturnedItemIds = array_diff($originalItemIds, $returnedItemIds);
+        foreach ($notReturnedItemIds as $itemId) {
+            ProblematicItem::updateOrCreate(
+                ['asset_loan_id' => $AssetLoan->id, 'master_item_id' => $itemId],
+                ['status' => 'not_returned', 'notes' => $request->notes ?? 'Item not returned']
+            );
         }
 
         return response()->json(['success' => 'Asset Loan updated successfully.']);

@@ -12,6 +12,7 @@ use App\Http\Controllers\OutgoingReportingController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AssetLoanController;
+use App\Http\Controllers\ProblematicItemController;
 use App\Http\Controllers\UserController;
 
 
@@ -70,6 +71,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/update-loan/{id}', [AssetLoanController::class, 'updateLoan'])->name('loan.update');
     Route::post('/return-loan/{id}', [AssetLoanController::class, 'returnLoan'])->name('loan.return');
     Route::post('/delete-loan/{id}', [AssetLoanController::class, 'deleteLoan'])->name('loan.delete');
+
+    Route::resource('problematic-items', ProblematicItemController::class);
+    Route::get('get-problematic-item-list', [ProblematicItemController::class, 'getProblematicItemList'])->name('problematic-item.get-problematic-item-list');
+    Route::post('/return-problematic-item/{id}', [ProblematicItemController::class, 'returnProblematicItem'])->name('problematic-return.update');
 
     Route::resource('outgoing_items', OutgoingItemController::class);
     Route::get('get-outgoing-list', [OutgoingItemController::class, 'getOutgoingList'])->name('outgoing.get-outgoing-list');
