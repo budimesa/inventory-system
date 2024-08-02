@@ -39,6 +39,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Master :</h6>
                 <a class="collapse-item @if(Request::is('employees')) active @endif" href="{{ url('/employees') }}">Master Karyawan</a>
+                <a class="collapse-item @if(Request::is('users')) active @endif" href="{{ url('/users') }}">Master User</a>
                 <a class="collapse-item @if(Request::is('master-items')) active @endif" href="{{ url('/master-items') }}">Master Barang</a>
             </div>
         </div>

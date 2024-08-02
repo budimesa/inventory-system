@@ -58,6 +58,12 @@ class EmployeeController extends Controller
 
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'employee_name' => 'required',
+            'division'      => 'required',
+            'phone'         => 'required',
+        ]);
+
         Employee::create([
             'employee_name' => $request->employee_name,
             'division'      => $request->division,

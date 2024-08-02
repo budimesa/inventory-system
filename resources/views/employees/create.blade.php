@@ -89,6 +89,24 @@
             $("input[name='phone']").removeClass('is-invalid');
         }
 
+        function resetForm() {
+            resetValid();
+            $("input[name='employee_name']").val('');
+            $("select[name='division']").val(null).trigger('change');
+            $("input[name='phone']").val('');
+            setLoading(false);
+        }
+
+        function setLoading(bool) {
+            if (bool == true) {
+                $('#btnLoader').removeClass('d-none');
+                $('#btnSimpan').addClass('d-none');
+            } else {
+                $('#btnSimpan').removeClass('d-none');
+                $('#btnLoader').addClass('d-none');
+            }
+        }
+
         function submitForm() {
             const employee_name = $("input[name='employee_name']").val();  
             const division = $("select[name='division']").val();
@@ -115,34 +133,27 @@
                     table.ajax.reload(null, false);
                     resetForm();
                 },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Terjadi kesalahan saat menambahkan employee.',
-                        footer: '<a href>Hubungi administrator jika masalah berlanjut.</a>'
-                    });
+                error: function(xhr) {
+                    // Menangani kesalahan validasi dari server
+                    let errors = xhr.responseJSON.errors;
+                    if (errors.employee_name) {
+                        validate(errors.employee_name[0], 'warning');
+                        $("input[name='employee_name']").addClass('is-invalid');
+                    }
+
+                    if (errors.division) {
+                        validate(errors.division[0], 'warning');
+                        $("select[name='division']").addClass('is-invalid');
+                    }
+
+                    if (errors.phone) {
+                        validate(errors.phone[0], 'warning');
+                        $("input[name='phone']").addClass('is-invalid');
+                    }
+
+                    setLoading(false);
                 }
             });
-        }
-
-        function resetForm() {
-            resetValid();
-            $("input[name='employee_name']").val('');
-            $("select[name='division']").val(null).trigger('change');
-            $("input[name='phone']").val('');
-            setLoading(false);
-        }
-
-        function setLoading(bool) {
-            if (bool == true) {
-                $('#btnLoader').removeClass('d-none');
-                $('#btnSimpan').addClass('d-none');
-            } else {
-                $('#btnSimpan').removeClass('d-none');
-                $('#btnLoader').addClass('d-none');
-            }
         }
     </script>
 @endsection

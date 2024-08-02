@@ -28,7 +28,7 @@
 
         $.ajax({
             type: 'POST',
-            url: `/delete-employee/${id}`,
+            url: `/delete-user/${id}`,
             data: {
                 _token: "{{ csrf_token() }}"
             },

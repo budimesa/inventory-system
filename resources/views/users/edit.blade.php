@@ -3,26 +3,17 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content modal-content-demo">
             <div class="modal-header">
-                <h6 class="modal-title">Ubah Karyawan</h6><button aria-label="Close" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <h6 class="modal-title">Ubah User</h6><button aria-label="Close" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-                <input type="hidden" name="idEmployeeU">
+                <input type="hidden" name="idU">
                 <div class="form-group">
-                    <label for="employeeNameU" class="form-label">Karyawan <span class="text-danger">*</span></label>
-                    <input type="text" name="employeeNameU" class="form-control" placeholder="">
+                    <label for="nameU" class="form-label">User <span class="text-danger">*</span></label>
+                    <input type="text" name="nameU" class="form-control" placeholder="">
                 </div>
                 <div class="form-group">
-                    <label for="name" class="form-label">Divisi <span class="text-danger">*</span></label>
-                    <select name="employeeDivisionU" class="form-control select2">
-                        <option value="" disabled selected>Pilih Divisi</option>
-                        @foreach($divisions as $division)
-                        <option value="{{ $division }}">{{ $division }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="name" class="form-label">No HP <span class="text-danger">*</span></label>
-                    <input type="text" name="employeePhone" class="form-control" placeholder="">
+                    <label for="emailU" class="form-label">Email <span class="text-danger">*</span></label>
+                    <input type="email" name="emailU" class="form-control" placeholder="">
                 </div> 
             </div>
             <div class="modal-footer">
@@ -45,49 +36,40 @@
             });
         });
     function checkFormU() {
-        const employeeName = $("input[name='employeeNameU']").val();
-        const phone = $("input[name='phoneU']").val();
-        const division = $("input[name='divisionU']").val();
+        const name = $("input[name='nameU']").val();
+        const email = $("input[name='emailU']").val();
         setLoadingU(true);
         resetValidU();
 
-        if (employeeName == "") {
-            validate('Nama Karyawan wajib di isi!', 'warning');
-            $("input[name='employeeNameU']").addClass('is-invalid');
+        if (name == "") {
+            validate('Nama User wajib di isi!', 'warning');
+            $("input[name='nameU']").addClass('is-invalid');
             setLoadingU(false);
             return false;
         } 
-        else if (phone == "") {
-            validate('No HP wajib di isi!', 'warning');
-            $("input[name='phoneU']").addClass('is-invalid');
+        else if (email == "") {
+            validate('Email wajib di isi!', 'warning');
+            $("input[name='emailU']").addClass('is-invalid');
             setLoadingU(false);
             return false;
         }
-        else if (division == "") {
-            validate('division wajib di isi!', 'warning');
-            $("input[name='divisionU']").addClass('is-invalid');
-            setLoadingU(false);
-            return false;
-        } 
         else {
             submitFormU();
         }
     }
 
     function submitFormU() {
-        const id = $("input[name='idEmployeeU']").val();
-        const employeeName = $("input[name='employeeNameU']").val();
-        const division = $("select[name='divisionU']").val();
-        const phone = $("input[name='phoneU']").val();
+        const id = $("input[name='idU']").val();
+        const name = $("input[name='nameU']").val();
+        const email = $("input[name='emailU']").val();
         
         $.ajax({
             type: 'POST',
-            url: `/update-employee/${id}`,
+            url: `/update-user/${id}`,
             enctype: 'multipart/form-data',
             data: {
-                name: employeeName,
-                phone: phone,
-                division: division,
+                name: name,
+                email: email,
                 _token: "{{ csrf_token() }}"
             },
             success: function(data) {
@@ -100,22 +82,33 @@
                 $('#Umodaldemo8').modal('toggle');
                 table.ajax.reload(null, false);
                 resetU();
+            },
+            error: function(xhr) {
+                // Menangani kesalahan validasi dari server
+                let errors = xhr.responseJSON.errors;
+                if (errors.name) {
+                    validate(errors.name[0], 'warning');
+                    $("input[name='name']").addClass('is-invalid');
+                }
+                if (errors.email) {
+                    validate(errors.email[0], 'warning');
+                    $("input[name='email']").addClass('is-invalid');
+                }
+                setLoadingU(false);
             }
         });
     }
 
     function resetValidU() {
-        $("input[name='employeeNameU']").removeClass('is-invalid');
-        $("input[name='divisionU']").removeClass('is-invalid');
-        $("input[name='phoneU']").removeClass('is-invalid');
+        $("input[name='nameU']").removeClass('is-invalid');
+        $("input[name='emailU']").removeClass('is-invalid');
     };
 
     function resetU() {
         resetValidU();
-        $("input[name='idEmployeeU']").val('');
-        $("input[name='employeeNameU']").val('');
-        $("select[name='divisionU']").val('');
-        $("input[name='phoneU']").val('');
+        $("input[name='idU']").val('');
+        $("input[name='nameU']").val('');
+        $("select[name='emailU']").val('');
         setLoadingU(false);
     }
 

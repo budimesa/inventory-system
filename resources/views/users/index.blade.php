@@ -16,8 +16,8 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>                       
-                        <th>Division</th>  
-                        <th>Phone</th>  
+                        <th>Email</th>  
+                        <th>Created At</th>  
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -73,12 +73,12 @@
                         name: 'name',
                     },
                     {
-                        data: 'division',
-                        name: 'division',
+                        data: 'email',
+                        name: 'email',
                     },
                     {
-                        data: 'phone',
-                        name: 'phone',
+                        data: 'created_at',
+                        name: 'created_at',
                     },
                     {
                         data: 'action',
@@ -92,16 +92,15 @@
         });
 
 
-        $('#table-employees').on('click', '.btn-edit', function() {
+        $('#table-users').on('click', '.btn-edit', function() {
             var editData = $(this).data('edit');
-            $("input[name='idEmployeesU']").val(editData.id);
-            $("input[name='employeeNameU']").val(editData.employee_name);
-            $("select[name='employeeDivisionU']").val(editData.division).trigger('change');
-            $("input[name='employeePhone']").val(editData.phone);
+            $("input[name='idU']").val(editData.id);
+            $("input[name='nameU']").val(editData.name);
+            $("input[name='emailU']").val(editData.email);            
         });
 
         function destroy(data) {
-            $("input[name='employee_id']").val(data);
+            $("input[name='user_id']").val(data);
         }
     </script>
 @endpush

@@ -36,10 +36,11 @@ Auth::routes();
 
 Route::middleware('auth')->group(function () {
 
-    Route::middleware('auth')->group(function() {
-        Route::get('password/change', [ChangePasswordController::class, 'showChangePasswordForm'])->name('password.change');
-        Route::post('password/change', [ChangePasswordController::class, 'changePassword'])->name('password.update');
-    });
+    // Route::middleware('auth')->group(function() {
+        
+    // });
+    Route::get('password/change', [ChangePasswordController::class, 'showChangePasswordForm'])->name('password.change');
+    Route::post('password/change', [ChangePasswordController::class, 'changePassword'])->name('password.update');
     
     Route::resource('suppliers', SupplierController::class)->except([
         'destroy'
@@ -67,6 +68,12 @@ Route::middleware('auth')->group(function () {
     Route::get('get-employee-list', [EmployeeController::class, 'getEmployeeList'])->name('employees.get-employees-list');
     Route::post('update-employee/{id}', [EmployeeController::class, 'updateEmployee']);
     Route::post('delete-employee/{id}', [EmployeeController::class, 'deleteEmployee']);
+
+    Route::resource('users', UserController::class);
+    Route::get('get-dropdown-user', [UserController::class, 'getDropdownUser']);
+    Route::get('get-user-list', [UserController::class, 'getUserList'])->name('users.get-users-list');
+    Route::post('update-user/{id}', [UserController::class, 'updateUser']);
+    Route::post('delete-user/{id}', [UserController::class, 'deleteUser']);
 
     Route::resource('incoming_items', IncomingItemController::class);
     Route::get('get-incoming-list', [IncomingItemController::class, 'getIncomingList'])->name('incoming.get-incoming-list');

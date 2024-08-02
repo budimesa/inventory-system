@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title">Tambah Karyawan</h6>
+                <h6 class="modal-title">Tambah User</h6>
                 <button aria-label="Close" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -11,22 +11,21 @@
             <div class="modal-body">
                 <form id="employeeForm">
                     <div class="form-group">
-                        <label for="name" class="form-label">Nama Karyawan<span class="text-danger">*</span></label>
-                        <input type="text" name="employee_name" class="form-control" placeholder="">
+                        <label for="name" class="form-label">Nama User<span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" placeholder="">
                     </div>
                     <div class="form-group">
-                        <label for="name" class="form-label">Divisi <span class="text-danger">*</span></label>
-                        <select name="division" class="form-control select2" id="division">
-                            <option value="" disabled selected>Pilih Divisi</option>
-                            @foreach($divisions as $division)
-                            <option value="{{ $division }}">{{ $division }}</option>
-                            @endforeach
-                        </select>
+                        <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
+                        <input type="email" name="email" class="form-control" placeholder="">
                     </div>
                     <div class="form-group">
-                        <label for="name" class="form-label">No HP <span class="text-danger">*</span></label>
-                        <input type="text" name="phone" class="form-control" placeholder="">
-                    </div>          
+                        <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
+                        <input type="password" name="password" class="form-control" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password" class="form-label">Konfirmasi Password<span class="text-danger">*</span></label>
+                        <input type="password" name="confirm_password" class="form-control" placeholder="">
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -51,29 +50,44 @@
             });
         });
         function checkForm() {
-            const employee_name = $("input[name='employee_name']").val();
-            const division = $("select[name='division']").val();
-            const phone = $("input[name='phone']").val();
+            const name = $("input[name='name']").val();
+            const email = $("input[name='email']").val();
+            const password = $("input[name='password']").val();
+            const confirm_password = $("input[name='confirm_password']").val();
             
             setLoading(true);
             resetValid();
 
-            if (employee_name == "") {
-                validate('Nama karyawan wajib di isi!', 'warning');
+            if (name == "") {
+                validate('Nama User wajib di isi!', 'warning');
                 $("input[name='name']").addClass('is-invalid');
                 setLoading(false);
                 return false;
             }
-            else if (division == "") {
-                validate('Nama divisi wajib di isi!', 'warning');
-                $("select[name='division']").addClass('is-invalid');
+            else if (email == "") {
+                validate('Email wajib di isi!', 'warning');
+                $("select[name='email']").addClass('is-invalid');
                 setLoading(false);
                 return false;
             }
 
-            else if (phone == "") {
-                validate('No HP wajib di isi!', 'warning');
-                $("input[name='phone']").addClass('is-invalid');
+            else if (password == "") {
+                validate('Password wajib di isi!', 'warning');
+                $("input[name='password']").addClass('is-invalid');
+                setLoading(false);
+                return false;
+            }
+
+            else if (confirm_password == "") {
+                validate('Konfirmasi password wajib di isi!', 'warning');
+                $("input[name='confirm_password']").addClass('is-invalid');
+                setLoading(false);
+                return false;
+            }
+
+            else if (password !== confirm_password) {
+                validate('Konfirmasi password tidak sesuai', 'warning');
+                $("input[name='confirm_password']").addClass('is-invalid');
                 setLoading(false);
                 return false;
             }
@@ -84,24 +98,45 @@
         }
 
         function resetValid() {
-            $("input[name='employee_name']").removeClass('is-invalid');
-            $("select[name='division']").removeClass('is-invalid');
-            $("input[name='phone']").removeClass('is-invalid');
+            $("input[name='name']").removeClass('is-invalid');
+            $("input[name='email']").removeClass('is-invalid');
+            $("input[name='password']").removeClass('is-invalid');
+            $("input[name='confirmation_password']").removeClass('is-invalid');
+            
+        }
+
+        function resetForm() {
+            resetValid();
+            $("input[name='name']").val('');
+            $("input[name='email']").val('');
+            $("input[name='password']").val('');
+            $("input[name='password']").val('');
+            setLoading(false);
+        }
+
+        function setLoading(bool) {
+            if (bool == true) {
+                $('#btnLoader').removeClass('d-none');
+                $('#btnSimpan').addClass('d-none');
+            } else {
+                $('#btnSimpan').removeClass('d-none');
+                $('#btnLoader').addClass('d-none');
+            }
         }
 
         function submitForm() {
-            const employee_name = $("input[name='employee_name']").val();  
-            const division = $("select[name='division']").val();
-            const phone = $("input[name='phone']").val();
+            const name = $("input[name='name']").val();  
+            const email = $("input[name='email']").val();
+            const password = $("input[name='password']").val();
             
             $.ajax({
                 type: 'POST',
-                url: "{{ route('employees.store') }}",
+                url: "{{ route('users.store') }}",
                 enctype: 'multipart/form-data',
                 data: {
-                    employee_name: employee_name,    
-                    division: division,
-                    phone: phone,    
+                    name: name,    
+                    email: email,
+                    password: password,    
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(data) {
@@ -115,34 +150,22 @@
                     table.ajax.reload(null, false);
                     resetForm();
                 },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Terjadi kesalahan saat menambahkan employee.',
-                        footer: '<a href>Hubungi administrator jika masalah berlanjut.</a>'
-                    });
+                error: function(xhr) {
+                    // Menangani kesalahan validasi dari server
+                    let errors = xhr.responseJSON.errors;
+                    if (errors.name) {
+                        validate(errors.name[0], 'warning');
+                        $("input[name='name']").addClass('is-invalid');
+                    }
+
+                    if (errors.email) {
+                        validate(errors.email[0], 'warning');
+                        $("input[name='email']").addClass('is-invalid');
+                    }
+
+                    setLoading(false);
                 }
             });
-        }
-
-        function resetForm() {
-            resetValid();
-            $("input[name='employee_name']").val('');
-            $("select[name='division']").val(null).trigger('change');
-            $("input[name='phone']").val('');
-            setLoading(false);
-        }
-
-        function setLoading(bool) {
-            if (bool == true) {
-                $('#btnLoader').removeClass('d-none');
-                $('#btnSimpan').addClass('d-none');
-            } else {
-                $('#btnSimpan').removeClass('d-none');
-                $('#btnLoader').addClass('d-none');
-            }
         }
     </script>
 @endsection
