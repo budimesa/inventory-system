@@ -132,10 +132,11 @@
     }
     
     function submitReturnForm() {
-        const id = $("input[name='id']").val();
+        const id = $("#return_id").val();
         const return_date = $("input[name='return_date']").val();
         const notes = $("textarea[name='notes']").val();
         const return_master_item_id = $("#return_master_item_id").val();
+
         $.ajax({
             type: 'POST',
             url: `/return-loan/${id}`,
@@ -143,7 +144,6 @@
             data: {
                 return_date: return_date,
                 notes: notes,
-                received_by: received_by,
                 master_item_id: return_master_item_id,
                 _token: "{{ csrf_token() }}"
             },

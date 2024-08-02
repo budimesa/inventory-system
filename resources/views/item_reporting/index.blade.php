@@ -25,11 +25,13 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Item Code</th>
-                        <th>Name</th>                        
-                        <th>Total Incoming</th>
-                        <th>Total Outgoing</th>
+                        <th>Nama Barang</th>
+                        <th>Jenis Barang</th>                        
+                        <th>Deskripsi</th>
                         <th>Total Stock</th>
+                        <th>Stock Terkini</th>
+                        <th>Total Barang Dipinjam</th>
+                        <th>Total Barang Bermasalah</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -86,24 +88,32 @@
                         searchable: false
                     },
                     {
-                        data: 'item_code',
-                        name: 'item_code',
+                        data: 'item_name',
+                        name: 'item_name',
                     },
                     {
-                        data: 'name',
-                        name: 'name',
+                        data: 'item_type',
+                        name: 'item_type',
                     },
                     {
-                        data: 'total_incoming',
-                        name: 'total_incoming',
-                    },                    
+                        data: 'description',
+                        name: 'description',
+                    },  
                     {
-                        data: 'total_outgoing',
-                        name: 'total_outgoing',
-                    },
+                        data: 'total_stock',
+                        name: 'total_stock',
+                    },                  
                     {
                         data: 'stock',
                         name: 'stock',
+                    },
+                    {
+                        data: 'borrowed_count',
+                        name: 'borrowed_count',
+                    },
+                    {
+                        data: 'problematic_count',
+                        name: 'problematic_count',
                     },
                 ],
                 // Add Buttons configuration here

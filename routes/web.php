@@ -35,12 +35,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::middleware('auth')->group(function () {
-
-    // Route::middleware('auth')->group(function() {
-        
-    // });
-    Route::get('password/change', [ChangePasswordController::class, 'showChangePasswordForm'])->name('password.change');
-    Route::post('password/change', [ChangePasswordController::class, 'changePassword'])->name('password.update');
     
     Route::resource('suppliers', SupplierController::class)->except([
         'destroy'
@@ -105,6 +99,8 @@ Route::middleware('auth')->group(function () {
     Route::get('get-incoming-report', [IncomingReportingController::class, 'getIncomingReport'])->name('reporting.get-incoming-report');
 
     Route::put('/change-password', [UserController::class, 'changePassword'])->name('change.password');
+    Route::get('password/change', [ChangePasswordController::class, 'showChangePasswordForm'])->name('password.change');
+    Route::post('password/change', [ChangePasswordController::class, 'changePassword'])->name('password.change.update');
 
 });
 
