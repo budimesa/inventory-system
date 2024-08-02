@@ -14,7 +14,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AssetLoanController;
 use App\Http\Controllers\ProblematicItemController;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\Auth\ChangePasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,9 +31,16 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
+
 Auth::routes();
 
 Route::middleware('auth')->group(function () {
+
+    Route::middleware('auth')->group(function() {
+        Route::get('password/change', [ChangePasswordController::class, 'showChangePasswordForm'])->name('password.change');
+        Route::post('password/change', [ChangePasswordController::class, 'changePassword'])->name('password.update');
+    });
+    
     Route::resource('suppliers', SupplierController::class)->except([
         'destroy'
     ]);
@@ -97,3 +104,7 @@ Route::middleware('auth')->group(function () {
 
 // Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// Auth::routes();
+
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

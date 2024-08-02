@@ -75,45 +75,6 @@ class AssetLoanController extends Controller
             })
             ->rawColumns(['action'])
             ->make(true);
-
-            // Mendapatkan data pinjaman aset dan relasinya
-            // $data = AssetLoan::leftJoin('employees', 'asset_loans.employee_id', '=', 'employees.id')
-            //     ->select('asset_loans.*', 'employees.employee_name', 'employees.division')
-            //     ->with('masterItems') // Mendapatkan item yang berhubungan melalui pivot table
-            //     ->orderBy('asset_loans.id', 'DESC')
-            //     ->get();
-    
-            // return DataTables::of($data)
-            //     ->addIndexColumn()
-            //     ->addColumn('item_details', function ($row) {
-            //         // Mengambil item_name dan item_type dari relasi dan menggabungkannya
-            //         return $row->masterItems->map(function ($item) {
-            //             return $item->item_name . ' (' . $item->item_type .')';
-            //         })->implode(', ');
-            //     })
-            //     ->addColumn('action', function ($row) {
-            //         $isReturnDateSet = !is_null($row->return_date);
-
-            //         // Menentukan class disabled jika return_date ada
-            //         $disabledClass = $isReturnDateSet ? 'disabled' : '';
-        
-            //         // Membuat tombol-tombol dengan kondisi disabled
-            //         $editButton = $isReturnDateSet ? 
-            //             '<a class="btn modal-effect text-primary btn-sm btn-edit ' . $disabledClass . '" data-toggle="modal" href="#Umodaldemo8" data-toggle="tooltip" data-original-title="Edit" data-edit=\'' . json_encode($row) . '\'><span class="fas fa-edit text-success fs-14"></span></a>' :
-            //             '<a class="btn modal-effect text-primary btn-sm btn-edit" data-toggle="modal" href="#Umodaldemo8" data-toggle="tooltip" data-original-title="Edit" data-edit=\'' . json_encode($row) . '\'><span class="fas fa-edit text-success fs-14"></span></a>';
-        
-            //         $returnButton = $isReturnDateSet ?
-            //             '<a class="btn modal-effect text-primary btn-sm btn-return ' . $disabledClass . '" data-toggle="modal" href="#Umodaldemo9" data-toggle="tooltip" data-original-title="Return" data-return=\'' . json_encode($row) . '\'><span class="fas fa-reply text-success fs-14"></span></a>' :
-            //             '<a class="btn modal-effect text-primary btn-sm btn-return" data-toggle="modal" href="#Umodaldemo9" data-toggle="tooltip" data-original-title="Return" data-return=\'' . json_encode($row) . '\'><span class="fas fa-reply text-success fs-14"></span></a>';
-        
-            //         // Mengembalikan tombol aksi
-            //         return '<div class="g-2">' . $editButton . ' ' . $returnButton . '</div>';
-            //     })
-            //     ->addColumn('incoming_date', function ($row) {
-            //         return Carbon::parse($row->incoming_date)->format('Y-m-d');
-            //     })
-            //     ->rawColumns(['action'])
-            //     ->make(true);
         }
     }
 
@@ -225,7 +186,7 @@ class AssetLoanController extends Controller
         foreach ($notReturnedItemIds as $itemId) {
             ProblematicItem::updateOrCreate(
                 ['asset_loan_id' => $AssetLoan->id, 'master_item_id' => $itemId],
-                ['status' => 'not_returned', 'notes' => $request->notes ?? 'Item not returned']
+                ['status' => 'not_returned']
             );
         }
 

@@ -43,8 +43,8 @@
     <div class="card-body">
         <div>
             <a class="modal-effect btn btn-primary mb-3" data-toggle="modal" data-target="#modalAdd">Tambah Transaksi Baru</a>
-            <button id="filter-due-soon" class="btn btn-secondary mb-3">Filter Jatuh Tempo</button>
-            <button id="filter-late" class="btn btn-secondary mb-3">Filter Terlambat</button>
+            <button id="filter-due-soon" class="btn btn-secondary mb-3"><i class="fas fa-filter  fa-xs mr-2"></i>Due Soon</button>
+            <button id="filter-late" class="btn btn-secondary mb-3"><i class="fas fa-filter fa-xs mr-2"></i>Late</button>
         </div>        
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-fixed" id="table-loan" width="100%" cellspacing="0">

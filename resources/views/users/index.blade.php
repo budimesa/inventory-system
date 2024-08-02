@@ -3,21 +3,21 @@
 @section('content')
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Daftar Barang</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Daftar User</h6>
     </div>
     <div class="card-body">        
         <div>
-            <a class="modal-effect btn btn-primary mb-3" data-toggle="modal" data-target="#modalAdd">Tambah Barang</a>
+            <a class="modal-effect btn btn-primary mb-3" data-toggle="modal" data-target="#modalAdd">Tambah User</a>
         </div>
+        
         <div class="table-responsive">
-            <table class="table table-bordered table-striped" id="table-item" width="100%" cellspacing="0">
+            <table class="table table-bordered table-striped" id="table-users" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Nama Barang</th>
-                        <th>Jenis Barang</th>
-                        <th>Deskripsi</th>
-                        <th>Stock</th>
+                        <th>Name</th>                       
+                        <th>Division</th>  
+                        <th>Phone</th>  
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -28,9 +28,9 @@
     </div>
 </div>
 
-@include('master_items.create')
-@include('master_items.edit')
-@include('master_items.delete')
+@include('users.create')
+@include('users.edit')
+@include('users.delete')
 @endsection
 
 @push('scripts')
@@ -44,7 +44,7 @@
         var table;
         $(document).ready(function() {
             //datatables
-            table = $('#table-item').DataTable({
+            table = $('#table-users').DataTable({
 
                 "processing": true,
                 "serverSide": true,
@@ -60,7 +60,7 @@
                 lengthChange: true,
 
                 "ajax": {
-                    "url": "{{ route('master-item.get-master-item-list') }}",
+                    "url": "{{ route('users.get-users-list') }}",
                 },
 
                 "columns": [{
@@ -69,20 +69,16 @@
                         searchable: false
                     },
                     {
-                        data: 'item_name',
-                        name: 'item_name',
+                        data: 'name',
+                        name: 'name',
                     },
                     {
-                        data: 'item_type',
-                        name: 'item_type',
+                        data: 'division',
+                        name: 'division',
                     },
                     {
-                        data: 'description',
-                        name: 'description',
-                    },
-                    {
-                        data: 'stock',
-                        name: 'stock',
+                        data: 'phone',
+                        name: 'phone',
                     },
                     {
                         data: 'action',
@@ -96,28 +92,16 @@
         });
 
 
-        $('#table-item').on('click', '.btn-edit', function() {
+        $('#table-employees').on('click', '.btn-edit', function() {
             var editData = $(this).data('edit');
-            console.log(editData)
-            $("input[name='idItemU']").val(editData.id);
-            $("input[name='itemNameU']").val(editData.item_name);            
-            $("input[name='itemTypeU']").val(editData.item_type);
-            $("input[name='stockU']").val(editData.stock);
-            $("textarea[name='descriptionU']").val(editData.description);
+            $("input[name='idEmployeesU']").val(editData.id);
+            $("input[name='employeeNameU']").val(editData.employee_name);
+            $("select[name='employeeDivisionU']").val(editData.division).trigger('change');
+            $("input[name='employeePhone']").val(editData.phone);
         });
 
         function destroy(data) {
-            $("input[name='item_id']").val(data);
+            $("input[name='employee_id']").val(data);
         }
-</script>
-@if (session('status'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Password Changed!',
-            text: '{{ session('status') }}',
-            showConfirmButton: true
-        });
     </script>
-@endif
 @endpush
