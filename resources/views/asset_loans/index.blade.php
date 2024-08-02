@@ -1,20 +1,35 @@
 <style>
-/* Tambahkan CSS ini ke file CSS Anda */
+
 .dataTables_wrapper .dataTables_scroll .dataTables_scrollBody {
     overflow-x: auto;
 }
-/* Gaya untuk kolom fixed */
+
 .dataTables_wrapper .dataTables_scroll .dataTables_scrollBody table td:last-child,
 .dataTables_wrapper .dataTables_scroll .dataTables_scrollBody table th:last-child {
     position: sticky;
     right: 0;
-    background-color: #fff; /* Atur warna latar belakang sesuai kebutuhan */
-    z-index: 1; /* Atur z-index untuk memastikan kolom tetap di atas */
+    background-color: #fff;
+    z-index: 1;
 }
 
-/* Menyembunyikan scrollbar horizontal dari container lain */
 .dataTables_wrapper {
     overflow-x: hidden;
+}
+
+.table-fixed {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.btn-filter-active {
+    background-color: #ffc107 !important; /* Warna kuning untuk tombol aktif */
+    border-color:#f4b30d !important;
+    color: #fff;
+}
+
+.btn-filter-inactive {
+    background-color: #6c757d; /* Warna abu-abu untuk tombol non-aktif */
+    color: #fff;
 }
 
 </style>
@@ -28,9 +43,11 @@
     <div class="card-body">
         <div>
             <a class="modal-effect btn btn-primary mb-3" data-toggle="modal" data-target="#modalAdd">Tambah Transaksi Baru</a>
-        </div>
+            <button id="filter-due-soon" class="btn btn-secondary mb-3">Filter Jatuh Tempo</button>
+            <button id="filter-late" class="btn btn-secondary mb-3">Filter Terlambat</button>
+        </div>        
         <div class="table-responsive">
-            <table class="table table-bordered" id="table-loan" width="100%" cellspacing="0">
+            <table class="table table-bordered table-striped table-fixed" id="table-loan" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -86,8 +103,12 @@
 
                 lengthChange: true,
 
-                "ajax": {
-                    "url": "{{ route('loan.get-loan-list') }}",
+                 ajax: {
+                    url: "{{ route('loan.get-loan-list') }}",
+                    data: function (d) {
+                        d.due_soon = $('#filter-due-soon').hasClass('btn-filter-active') ? 1 : 0;
+                        d.late = $('#filter-late').hasClass('btn-filter-active') ? 1 : 0;
+                    }
                 },
 
                 "columns": [{
@@ -138,6 +159,21 @@
                         searchable: false
                     },
                 ],
+                columnDefs: [
+                    { targets: 0, width: '30px' },
+                    { targets: 1, width: '200px' },
+                    { targets: 2, width: '200px' },
+                    { targets: 3, width: '200px' },
+                    { targets: 4, width: '200px' },
+                    { targets: 5, width: '200px' },
+                    { targets: 6, width: '200px' },
+                    { targets: 7, width: '200px' },
+                    { targets: 8, width: '200px' },
+                    { targets: 9, width: '200px' },
+                    { targets: 10, width: '80px' },
+                    
+                ],
+                autoWidth: false, // Nonaktifkan autoWidth
 
             // FixedColumns settings
             "scrollX": true,
@@ -151,6 +187,22 @@
                 leftColumns: 0, // Menentukan jumlah kolom yang akan tetap terlihat di sebelah kiri
                 rightColumns: 1 // Menentukan jumlah kolom yang akan tetap terlihat di sebelah kanan
             });
+
+            $('#filter-due-soon').on('click', function() {
+                $(this).toggleClass('btn-filter-active btn-filter-inactive');
+                $('#filter-late').removeClass('btn-filter-active').addClass('btn-filter-inactive');
+                table.ajax.reload();
+            });
+
+            $('#filter-late').on('click', function() {
+                $(this).toggleClass('btn-filter-active btn-filter-inactive');
+                $('#filter-due-soon').removeClass('btn-filter-active').addClass('btn-filter-inactive');
+                table.ajax.reload();
+            });
+
+            // Set initial class for the buttons
+            $('#filter-due-soon').addClass('btn-filter-inactive');
+            $('#filter-late').addClass('btn-filter-inactive');
         });
 
 

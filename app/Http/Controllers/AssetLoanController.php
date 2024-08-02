@@ -26,37 +26,94 @@ class AssetLoanController extends Controller
     public function getLoanList(Request $request)
     {
         if ($request->ajax()) {
+
+            $query = AssetLoan::leftJoin('employees', 'asset_loans.employee_id', '=', 'employees.id')
+            ->select('asset_loans.*', 'employees.employee_name', 'employees.division')
+            ->with('masterItems') // Mendapatkan item yang berhubungan melalui pivot table
+            ->orderBy('asset_loans.id', 'DESC');
+
+        // Filter transaksi mendekati jatuh tempo
+        if ($request->due_soon) {
+            $query->where('planned_return_date', '>=', Carbon::now()->startOfDay())
+            ->where('planned_return_date', '<=', Carbon::now()->addDays(2)->endOfDay());
+        }
+
+        if ($request->late) {
+            $query->where('planned_return_date', '<=', Carbon::now());
+        }
+
+        $data = $query->get();
+
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('item_details', function ($row) {
+                // Mengambil item_name dan item_type dari relasi dan menggabungkannya
+                return $row->masterItems->map(function ($item) {
+                    return $item->item_name . ' (' . $item->item_type .')';
+                })->implode(', ');
+            })
+            ->addColumn('action', function ($row) {
+                $isReturnDateSet = !is_null($row->return_date);
+
+                // Menentukan class disabled jika return_date ada
+                $disabledClass = $isReturnDateSet ? 'disabled' : '';
+        
+                // Membuat tombol-tombol dengan kondisi disabled
+                $editButton = $isReturnDateSet ? 
+                    '<a class="btn modal-effect text-primary btn-sm btn-edit ' . $disabledClass . '" data-toggle="modal" href="#Umodaldemo8" data-toggle="tooltip" data-original-title="Edit" data-edit=\'' . json_encode($row) . '\'><span class="fas fa-edit text-success fs-14"></span></a>' :
+                    '<a class="btn modal-effect text-primary btn-sm btn-edit" data-toggle="modal" href="#Umodaldemo8" data-toggle="tooltip" data-original-title="Edit" data-edit=\'' . json_encode($row) . '\'><span class="fas fa-edit text-success fs-14"></span></a>';
+        
+                $returnButton = $isReturnDateSet ?
+                    '<a class="btn modal-effect text-primary btn-sm btn-return ' . $disabledClass . '" data-toggle="modal" href="#Umodaldemo9" data-toggle="tooltip" data-original-title="Return" data-return=\'' . json_encode($row) . '\'><span class="fas fa-reply text-success fs-14"></span></a>' :
+                    '<a class="btn modal-effect text-primary btn-sm btn-return" data-toggle="modal" href="#Umodaldemo9" data-toggle="tooltip" data-original-title="Return" data-return=\'' . json_encode($row) . '\'><span class="fas fa-reply text-success fs-14"></span></a>';
+        
+                // Mengembalikan tombol aksi
+                return '<div class="g-2">' . $editButton . ' ' . $returnButton . '</div>';
+            })
+            ->addColumn('incoming_date', function ($row) {
+                return Carbon::parse($row->incoming_date)->format('Y-m-d');
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+
             // Mendapatkan data pinjaman aset dan relasinya
-            $data = AssetLoan::leftJoin('employees', 'asset_loans.employee_id', '=', 'employees.id')
-                ->select('asset_loans.*', 'employees.employee_name', 'employees.division')
-                ->with('masterItems') // Mendapatkan item yang berhubungan melalui pivot table
-                ->orderBy('asset_loans.id', 'DESC')
-                ->get();
+            // $data = AssetLoan::leftJoin('employees', 'asset_loans.employee_id', '=', 'employees.id')
+            //     ->select('asset_loans.*', 'employees.employee_name', 'employees.division')
+            //     ->with('masterItems') // Mendapatkan item yang berhubungan melalui pivot table
+            //     ->orderBy('asset_loans.id', 'DESC')
+            //     ->get();
     
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('item_details', function ($row) {
-                    // Mengambil item_name dan item_type dari relasi dan menggabungkannya
-                    return $row->masterItems->map(function ($item) {
-                        return $item->item_name . ' (' . $item->item_type .')';
-                    })->implode(', ');
-                })
-                ->addColumn('action', function ($row) {
-                    $buttons = '
-                        <div class="g-2">
-                        <a class="btn modal-effect text-primary btn-sm btn-edit" data-toggle="modal" href="#Umodaldemo8" data-toggle="tooltip" data-original-title="Edit" data-edit=\''.json_encode($row).'\'><span class="fas fa-edit text-success fs-14"></span></a>
-                        <a class="btn modal-effect text-danger btn-sm" data-toggle="modal" href="#modalDemoDestroy" onclick=confirmDeleteItem(' . $row->id . ')><span class="fas fa-trash fs-14"></span></a>
-                        <a class="btn modal-effect text-primary btn-sm btn-return" data-toggle="modal" href="#Umodaldemo9" data-toggle="tooltip" data-original-title="Return" data-return=\''.json_encode($row).'\'><span class="fas fa-reply text-success fs-14"></span></a>
-                        </div>
-                        
-                    ';
-                    return $buttons;
-                })
-                ->addColumn('incoming_date', function ($row) {
-                    return Carbon::parse($row->incoming_date)->format('Y-m-d');
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+            // return DataTables::of($data)
+            //     ->addIndexColumn()
+            //     ->addColumn('item_details', function ($row) {
+            //         // Mengambil item_name dan item_type dari relasi dan menggabungkannya
+            //         return $row->masterItems->map(function ($item) {
+            //             return $item->item_name . ' (' . $item->item_type .')';
+            //         })->implode(', ');
+            //     })
+            //     ->addColumn('action', function ($row) {
+            //         $isReturnDateSet = !is_null($row->return_date);
+
+            //         // Menentukan class disabled jika return_date ada
+            //         $disabledClass = $isReturnDateSet ? 'disabled' : '';
+        
+            //         // Membuat tombol-tombol dengan kondisi disabled
+            //         $editButton = $isReturnDateSet ? 
+            //             '<a class="btn modal-effect text-primary btn-sm btn-edit ' . $disabledClass . '" data-toggle="modal" href="#Umodaldemo8" data-toggle="tooltip" data-original-title="Edit" data-edit=\'' . json_encode($row) . '\'><span class="fas fa-edit text-success fs-14"></span></a>' :
+            //             '<a class="btn modal-effect text-primary btn-sm btn-edit" data-toggle="modal" href="#Umodaldemo8" data-toggle="tooltip" data-original-title="Edit" data-edit=\'' . json_encode($row) . '\'><span class="fas fa-edit text-success fs-14"></span></a>';
+        
+            //         $returnButton = $isReturnDateSet ?
+            //             '<a class="btn modal-effect text-primary btn-sm btn-return ' . $disabledClass . '" data-toggle="modal" href="#Umodaldemo9" data-toggle="tooltip" data-original-title="Return" data-return=\'' . json_encode($row) . '\'><span class="fas fa-reply text-success fs-14"></span></a>' :
+            //             '<a class="btn modal-effect text-primary btn-sm btn-return" data-toggle="modal" href="#Umodaldemo9" data-toggle="tooltip" data-original-title="Return" data-return=\'' . json_encode($row) . '\'><span class="fas fa-reply text-success fs-14"></span></a>';
+        
+            //         // Mengembalikan tombol aksi
+            //         return '<div class="g-2">' . $editButton . ' ' . $returnButton . '</div>';
+            //     })
+            //     ->addColumn('incoming_date', function ($row) {
+            //         return Carbon::parse($row->incoming_date)->format('Y-m-d');
+            //     })
+            //     ->rawColumns(['action'])
+            //     ->make(true);
         }
     }
 

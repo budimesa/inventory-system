@@ -1,6 +1,6 @@
 <!-- MODAL EDIT -->
 <div class="modal fade" data-backdrop="static" id="Umodaldemo9">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title">Transaksi Pengembalian</h6>
@@ -11,22 +11,25 @@
             <div class="modal-body">
                 <form id="editForm">
                     <input type="hidden" name="id" id="return_id">
-                    <input type="hidden" value="{{ Auth::user()->name }}" name="received_by" id="received_by">
-                    <div class="form-group">
-                        <label for="return_division" class="form-label">Nama Divisi<span class="text-danger">*</span></label>
-                        <input type="text" name="return_division" class="form-control" id="return_division" readonly>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="return_division" class="form-label">Nama Divisi<span class="text-danger">*</span></label>
+                            <input type="text" name="return_division" class="form-control" id="return_division" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="return_employee" class="form-label">Nama Karyawan <span class="text-danger">*</span></label>
+                            <input type="text" name="return_employee" class="form-control" id="return_employee" readonly>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="return_employee" class="form-label">Nama Karyawan <span class="text-danger">*</span></label>
-                        <input type="text" name="return_employee" class="form-control" id="return_employee" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="return_borrow_date" class="form-label">Tanggal Pinjam Barang <span class="text-danger">*</span></label>                        
-                        <input type="text" name="return_borrow_date" class="form-control" id="return_borrow_date" placeholder="" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="return_planned_return_date" class="form-label">Tanggal Rencana Pengembalian <span class="text-danger">*</span></label>                        
-                        <input type="text" name="return_planned_return_date" class="form-control" id="return_planned_return_date" placeholder="" readonly>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="return_borrow_date" class="form-label">Tanggal Pinjam Barang <span class="text-danger">*</span></label>                        
+                            <input type="text" name="return_borrow_date" class="form-control" id="return_borrow_date" placeholder="" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="return_planned_return_date" class="form-label">Tanggal Rencana Pengembalian <span class="text-danger">*</span></label>                        
+                            <input type="text" name="return_planned_return_date" class="form-control" id="return_planned_return_date" placeholder="" readonly>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="return_master_item_id" class="form-label">Nama Barang <span class="text-danger">*</span></label>
@@ -84,47 +87,53 @@
     function checkReturnForm() {
         
         const return_master_item_id = $("#return_master_item_id").val();
-        const notes = $("input[name='notes']").val();
+        const return_date = $("input[name='return_date']").val();
+        const notes = $("textarea[name='notes']").val();
 
         setLoadingReturn(true);
         resetValidReturn();
 
-        if (notes == "") {
-            validate('Alasan Pinjam wajib di isi!', 'warning');
-            $("input[name='notes']").addClass('is-invalid');
+        if(return_master_item_id == "") {
+            validate('Barang wajib di isi!', 'warning');
+            $("input[name='return_master_item_id']").addClass('is-invalid');
             setLoading(false);
             return false;
         }
+        else if(return_date == "") {
+            validate('Tanggal Pengembalian wajib di isi!', 'warning');
+            $("input[name='return_date']").addClass('is-invalid');
+            setLoading(false);
+            return false;
+        }
+        else if (notes == "") {
+            validate('Keterangan wajib di isi!', 'warning');
+            $("textarea[name='notes']").addClass('is-invalid');
+            setLoading(false);
+            return false;
+        }        
         else {
             submitReturnForm();
         }
     }
 
     function resetValidReturn() {
-        // $("input[name='edit_borrow_date']").removeClass('is-invalid')
-        // $("input[name='edit_planned_return_date']").removeClass('is-invalid')
-        // $("select[name='editDivision']").removeClass('is-invalid');
-        // $("select[name='editEmployee']").removeClass('is-invalid')
-        // $("input[name='edit_loan_reason']").removeClass('is-invalid')
-        // $("select[name='return_master_item_id']").removeClass('is-invalid')
+        $("input[name='return_date']").removeClass('is-invalid')
+        $("textarea[name='notes']").removeClass('is-invalid');
+        $("select[name='return_master_item_id']").removeClass('is-invalid')
     }
 
     
     function resetReturnForm() {
         resetValidReturn();
-        // $("input[name='edit_borrow_date']").val('');
-        // $("input[name='edit_planned_return_date']").val('');
-        // $("select[name='editDivision']").val(null).trigger('change');
-        // $("select[name='editEmployee']").val(null).trigger('change');
-        // $("input[name='edit_loan_reason']").val('');
-        // $('#return_master_item_id').val(null).trigger('change');
+        $("input[name='return_date']").val('');
+        $("textarea[name='notes']").val('');
+        $('#return_master_item_id').val(null).trigger('change');
         setLoadingReturn(false);
     }
     
     function submitReturnForm() {
         const id = $("input[name='id']").val();
         const return_date = $("input[name='return_date']").val();
-        const received_by = $("input[name='received_by']").val();
         const notes = $("textarea[name='notes']").val();
         const return_master_item_id = $("#return_master_item_id").val();
         $.ajax({

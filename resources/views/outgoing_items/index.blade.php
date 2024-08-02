@@ -10,7 +10,7 @@
             <a class="modal-effect btn btn-primary mb-3" data-toggle="modal" data-target="#modalAdd">Tambah Barang Keluar</a>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered" id="table-outgoing" width="100%" cellspacing="0">
+            <table class="table table-bordered table-striped" id="table-outgoing" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>#</th>

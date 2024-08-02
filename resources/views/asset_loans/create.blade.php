@@ -1,5 +1,5 @@
 <div class="modal fade" data-backdrop="static" id="modalAdd">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title">Tambah Transaksi</h6>
@@ -9,29 +9,33 @@
             </div>
             <div class="modal-body">
                 <form id="itemForm">
-                    <div class="form-group">
-                        <label for="division" class="form-label">Divisi <span class="text-danger">*</span></label>
-                        <select name="division" id="division" class="form-control select2">
-                            <option value="" disabled selected>Pilih Divisi</option>
-                            @foreach($divisions as $division)
-                            <option value="{{ $division->division }}">{{ $division->division }}</option>
-                            @endforeach
-                        </select>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="division" class="form-label">Divisi <span class="text-danger">*</span></label>
+                            <select name="division" id="division" class="form-control select2">
+                                <option value="" disabled selected>Pilih Divisi</option>
+                                @foreach($divisions as $division)
+                                <option value="{{ $division->division }}">{{ $division->division }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+    
+                        <div class="form-group col-md-6">
+                            <label for="employee" class="form-label">Nama Karyawan <span class="text-danger">*</span></label>
+                            <select name="employee" id="employee" class="form-control select2" disabled>
+                                <option value="" disabled selected>Pilih Karyawan</option>
+                            </select>
+                        </div>
                     </div>
-
-                    <div class="form-group">
-                        <label for="employee" class="form-label">Nama Karyawan <span class="text-danger">*</span></label>
-                        <select name="employee" id="employee" class="form-control select2" disabled>
-                            <option value="" disabled selected>Pilih Karyawan</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="borrow_date" class="form-label">Tanggal Pinjam Barang <span class="text-danger">*</span></label>                        
-                        <input type="text" name="borrow_date" class="form-control" id="borrow_date" placeholder="">
-                    </div>
-                    <div class="form-group">
-                        <label for="planned_return_date" class="form-label">Tanggal Rencana Pengembalian <span class="text-danger">*</span></label>                        
-                        <input type="text" name="planned_return_date" class="form-control" id="planned_return_date" placeholder="">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="borrow_date" class="form-label">Tanggal Pinjam Barang <span class="text-danger">*</span></label>                        
+                            <input type="text" name="borrow_date" class="form-control" id="borrow_date" placeholder="">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="planned_return_date" class="form-label">Tanggal Rencana Pengembalian <span class="text-danger">*</span></label>                        
+                            <input type="text" name="planned_return_date" class="form-control" id="planned_return_date" placeholder="">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="master_item_id" class="form-label">Nama Barang <span class="text-danger">*</span></label>

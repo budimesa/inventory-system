@@ -17,10 +17,6 @@ class ProblematicItemController extends Controller
     public function index()
     {
         $problematicItem = ProblematicItem::all();
-        // $divisions =  Employee::select('division', DB::raw('count(*) as total'))
-        // ->groupBy('division')
-        // ->get();
-        // $master_items = MasterItem::where('stock', '>', 0)->get();
         return view('problematic_items.index', compact('problematicItem'));
     }
 
@@ -53,12 +49,16 @@ class ProblematicItemController extends Controller
                     return $row->status == 'not_returned' ? 'Belum Dikembalikan' : 'Dikembalikan';
                 })
                 ->addColumn('action', function ($row) {
-                    $buttons = '
-                        <div class="g-2">
-                        <a class="btn modal-effect text-primary btn-sm btn-return" data-toggle="modal" href="#Umodaldemo9" data-toggle="tooltip" data-original-title="Return" data-return=\''.json_encode($row).'\'><span class="fas fa-reply text-success fs-14"></span></a>
-                        </div>
-                    ';
-                    return $buttons;
+                    $isReturnDateSet = !is_null($row->return_date);
+                    // Menentukan class disabled jika return_date ada
+                    $disabledClass = $isReturnDateSet ? 'disabled' : '';
+                    // Membuat tombol-tombol dengan kondisi disabled
+                    $returnButton = $isReturnDateSet ?
+                        '<a class="btn modal-effect text-primary btn-sm btn-return ' . $disabledClass . '" data-toggle="modal" href="#Umodaldemo9" data-toggle="tooltip" data-original-title="Return" data-return=\'' . json_encode($row) . '\'><span class="fas fa-reply text-success fs-14"></span></a>' :
+                        '<a class="btn modal-effect text-primary btn-sm btn-return" data-toggle="modal" href="#Umodaldemo9" data-toggle="tooltip" data-original-title="Return" data-return=\'' . json_encode($row) . '\'><span class="fas fa-reply text-success fs-14"></span></a>';
+        
+                    // Mengembalikan tombol aksi
+                    return '<div class="g-2">' . $returnButton . '</div>';
                 })
                 ->rawColumns(['action'])
                 ->make(true);
