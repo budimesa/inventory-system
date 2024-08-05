@@ -34,9 +34,6 @@
                     <div class="form-group">
                         <label for="return_master_item_id" class="form-label">Nama Barang <span class="text-danger">*</span></label>
                         <select name="return_master_item_id[]" id="return_master_item_id" class="form-control select2" multiple="multiple">
-                            @foreach($master_items as $master_item)
-                            <option value="{{ $master_item->id }}">{{ $master_item->item_name .' - '. $master_item->item_type }}</option>
-                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">

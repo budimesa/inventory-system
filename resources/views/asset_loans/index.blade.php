@@ -223,21 +223,39 @@
 
         $('#table-loan').on('click', '.btn-return', function() {
             var returnData = $(this).data('return');
+            
+            // Mengosongkan dropdown
+            var itemSelect = $('#return_master_item_id');
+            itemSelect.empty(); // Menghapus semua opsi yang ada
+
+            // Menambahkan opsi baru ke dropdown
+            returnData.master_items.forEach(function(item) {
+                var newOption = new Option(item.item_name, item.id, true, true); // Membuat opsi baru
+                itemSelect.append(newOption); // Menambahkan opsi ke dropdown
+            });
+
+            // Menambahkan kembali kelas dan menginisialisasi select2
+            itemSelect.addClass('form-control select2').select2({
+                width: '100%'
+            });
+
+            // Mengatur nilai yang sudah terpilih
             var selectedValues = returnData.master_items.map(function(item) {
                 return item.id;
             });
-            // // Mengisi nilai ke dalam form modal edit
+            itemSelect.val(selectedValues).trigger('change');
+
+            // Mengisi nilai ke dalam form modal edit
             $('#return_id').val(returnData.id);
             $('#return_division').val(returnData.division);
             $('#return_employee').val(returnData.employee_name);
             $('#return_borrow_date').val(returnData.borrow_date);
             $('#return_planned_return_date').val(returnData.planned_return_date);
             $('#return_loan_reason').val(returnData.loan_reason);
-            $('#return_master_item_id').val(selectedValues).trigger('change');
         });
 
 
-        
+
          function destroy(data) {
             $("input[name='loan_id']").val(data);
         }
