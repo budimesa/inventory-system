@@ -15,7 +15,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/master-items'; // Ubah sesuai dengan route yang diinginkan
+    protected $redirectTo = '/home'; // Ubah sesuai dengan route yang diinginkan
 
     /**
      * Create a new controller instance.

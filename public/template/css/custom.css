@@ -13,3 +13,26 @@
 .select2-container--default .select2-selection--single .select2-selection__arrow {
     height: 36px !important;
 }
+
+.dashboard-icon {
+    font-size: xxx-large;
+    color:white;
+}
+.dashboard-card-body {
+    color: white;
+}
+.items-card {
+    background:seagreen
+}
+.problematic-items-card {
+    background: #D32F2F;
+}
+.asset-loans-card {
+    background:orangered;
+}
+
+.employees-card {
+    background:#003366;
+}
+
+/* 4E3A2E */
