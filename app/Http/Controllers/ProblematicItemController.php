@@ -23,8 +23,10 @@ class ProblematicItemController extends Controller
     public function getProblematicItemList(Request $request)
     {
         if ($request->ajax()) {
+            $startDate = $request->start_date;
+            $endDate = $request->end_date;
             // Mendapatkan data barang bermasalah dan relasinya
-            $data = ProblematicItem::leftJoin('asset_loans', 'problematic_items.asset_loan_id', '=', 'asset_loans.id')
+            $query = ProblematicItem::leftJoin('asset_loans', 'problematic_items.asset_loan_id', '=', 'asset_loans.id')
                 ->leftJoin('employees', 'asset_loans.employee_id', '=', 'employees.id')
                 ->leftJoin('master_items', 'problematic_items.master_item_id', '=', 'master_items.id')
                 ->select(
@@ -33,10 +35,31 @@ class ProblematicItemController extends Controller
                     'employees.division',
                     'master_items.item_name',
                     'master_items.item_type',
-                    'asset_loans.borrow_date'
+                    'asset_loans.borrow_date',
+                    'asset_loans.notes as asset_notes',
                 )
-                ->orderBy('problematic_items.id', 'DESC')
-                ->get();
+                ->orderBy('problematic_items.id', 'DESC');
+                // ->get();
+
+            if ($startDate && $endDate) {
+                if($request->date_type == 'borrow_date') {
+                    $query->whereBetween('asset_loans.borrow_date', [$startDate, $endDate]);
+                }
+                else {
+                    $query->whereBetween('problematic_items.return_date', [$startDate, $endDate]);
+                }
+            }
+
+            if ($request->status) {
+                if($request->status == 'not_returned') {
+                    $query->whereNull('problematic_items.return_date');
+                }
+                else {
+                    $query->whereNotNull('problematic_items.return_date');
+                }
+            }
+        
+            $data = $query->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()

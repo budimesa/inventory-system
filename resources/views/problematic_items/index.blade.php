@@ -5,7 +5,39 @@
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Transaksi Barang Bermasalah</h6>
     </div>
-    <div class="card-body">        
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label for="date_type">Jenis Tanggal</label>
+                <select name="date_type" id="date_type" class="form-control">
+                    <option value="borrow_date">Peminjaman</option>
+                    <option value="return_date">Pengembalian</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="start_date">Start Date</label>
+                <input type="text" id="start_date" class="form-control datepicker">
+                <i class="calendar-icon"></i>
+            </div>
+            <div class="col-md-3">
+                <label for="end_date">End Date</label>
+                <input type="text" id="end_date" class="form-control datepicker">
+            </div>
+            <div class="col-md-3">
+                <label for="filter-status">Status</label>
+                <select name="filter-status" id="filter-status" class="form-control">
+                    <option value="">Semua</option>
+                    <option value="not_returned">Belum Dikembalikan</option>
+                    <option value="returned">Telah Dikembalikan</option>
+                </select>
+            </div>
+        </div>
+        <div class="mb-3 d-flex">
+            <div class="ml-auto">
+                <button type="button" class="btn btn-secondary ml-1" id="reset_dates">Reset</button>
+                <button id="filter" class="btn btn-primary">Submit Filter</button>
+            </div>
+        </div>                
         <div class="table-responsive">
             <table class="table table-bordered table-striped" id="table-problematic-item" width="100%" cellspacing="0">
                 <thead>
@@ -13,11 +45,13 @@
                         <th>#</th>
                         <th>Nama Karyawan</th>
                         <th>Nama Divisi</th>
+                        <th>Tanggal Peminjaman</th>
                         <th>Nama Barang</th>
+                        <th>Jenis Masalah</th>
                         <th>Status</th>
                         <th>Tanggal Pengembalian</th>
                         <th>Keterangan</th>
-                        <th>Actions</th>
+                        <th class="not-export-col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,6 +67,13 @@
 
 @push('scripts')
 <script>
+
+        // Initialize datepicker
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true
+        });
+        
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -59,6 +100,12 @@
 
                 "ajax": {
                     "url": "{{ route('problematic-item.get-problematic-item-list') }}",
+                    "data": function(d) {
+                        d.date_type = $('#date_type').val();
+                        d.start_date = $('#start_date').val(); // Ambil nilai tanggal awal
+                        d.end_date = $('#end_date').val(); // Ambil nilai tanggal akhir
+                        d.status = $('#filter-status').val();
+                    }
                 },
 
                 "columns": [{
@@ -75,8 +122,16 @@
                         name: 'division',
                     },
                     {
+                        data: 'borrow_date',
+                        name: 'borrow_date',
+                    },
+                    {
                         data: 'item_details',
                         name: 'item_details',
+                    },
+                    {
+                        data: 'asset_notes',
+                        name: 'asset_notes',
                     },
                     {
                         data: 'status',
@@ -97,7 +152,32 @@
                         searchable: false
                     },
                 ],
-
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Laporan Transaksi Barang Bermasalah Berkala'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Laporan Transaksi Barang Bermasalah Berkala',
+                        orientation: 'landscape',
+                        exportOptions: {
+                        columns: function (idx, data, node) {
+                                // Return true for columns that should be exported
+                                return $(node).hasClass('not-export-col') ? false : true;
+                            }
+                        },
+                        customize: function (doc) {      
+                            doc.content.splice(0, 1, {
+                                text: [
+                                    { text: 'Laporan Transaksi Barang Bermasalah Berkala\n', fontSize: 15, bold: true, alignment: 'center', margin: [0, 0, , 12] }
+                                ]
+                            });
+                        }
+                    },
+                    'csv', 'print'
+                ],
             });
         });
 
@@ -117,5 +197,32 @@
         // function destroy(data) {
         //     $("input[name='item_id']").val(data);
         // }
+
+        // Filter button click event
+         $('#filter').click(function() {
+            var startDate = $('#start_date').val();
+            var endDate = $('#end_date').val();
+            var dateType = $('#date_type').val();
+
+             if ((startDate && !endDate) || (!startDate && endDate)) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Info',
+                    text: 'Please select both start and end dates.'
+                });
+                return;
+            }
+
+            table.draw();
+        });
+
+        $('#reset_dates').click(function() {
+            $('#date_type').val('borrow_date')
+            $('#start_date').val(''); // Reset nilai Start Date
+            $('#end_date').val(''); // Reset nilai End Date
+            $('#filter-status').val('')
+            table.draw();
+        });
+        
 </script>
 @endpush

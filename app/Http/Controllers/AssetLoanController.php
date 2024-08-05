@@ -8,6 +8,7 @@ use App\Models\ProblematicItem;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 
@@ -32,6 +33,14 @@ class AssetLoanController extends Controller
             ->with('masterItems') // Mendapatkan item yang berhubungan melalui pivot table
             ->orderBy('asset_loans.id', 'DESC');
 
+        if ($request->status) {
+            if($request->status == 'not_returned') {
+                $query->whereNull('return_date');
+            }
+            else {
+                $query->whereNotNull('return_date');
+            }
+        }
         // Filter transaksi mendekati jatuh tempo
         if ($request->due_soon) {
             $query->where('planned_return_date', '>=', Carbon::now()->startOfDay())
@@ -167,7 +176,7 @@ class AssetLoanController extends Controller
         $AssetLoan->update([
             'notes'   => $request->notes,
             'return_date'     => $request->return_date,
-            'received_by'   => $request->received_by,
+            'received_by'   =>  Auth::user()->name,
         ]);
         // Ambil master_item_id lama sebelum diupdate
         $originalItemIds = $AssetLoan->masterItems->pluck('id')->toArray();

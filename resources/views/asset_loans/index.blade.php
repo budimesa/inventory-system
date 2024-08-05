@@ -42,9 +42,23 @@
     </div>
     <div class="card-body">
         <div>
-            <a class="modal-effect btn btn-primary mb-3" data-toggle="modal" data-target="#modalAdd">Tambah Transaksi Baru</a>
-            <button id="filter-due-soon" class="btn btn-secondary mb-3"><i class="fas fa-filter  fa-xs mr-2"></i>Due Soon</button>
-            <button id="filter-late" class="btn btn-secondary mb-3"><i class="fas fa-filter fa-xs mr-2"></i>Late</button>
+            {{-- <a class="modal-effect btn btn-primary mb-3" data-toggle="modal" data-target="#modalAdd">Tambah Transaksi Baru</a> --}}
+            <div class="row d-flex">
+                <div class="col-md-6">
+                    <a class="modal-effect btn btn-primary mb-3" data-toggle="modal" data-target="#modalAdd">Tambah Transaksi Baru</a>
+                </div>
+                <div class="col-md-3">
+                    <select name="filter-status" id="filter-status" class="form-control">
+                        <option value="">Semua</option>
+                        <option value="not_returned">Belum Dikembalikan</option>
+                        <option value="returned">Telah Dikembalikan</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button id="filter-due-soon" class="btn btn-secondary mb-3"><i class="fas fa-filter  fa-xs mr-2"></i>Due Soon</button>
+                    <button id="filter-late" class="btn btn-secondary mb-3"><i class="fas fa-filter fa-xs mr-2"></i>Late</button>
+                </div>
+            </div>
         </div>        
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-fixed" id="table-loan" width="100%" cellspacing="0">
@@ -60,7 +74,7 @@
                         <th>Tanggal Pengembalian</th>
                         <th>Keterangan</th>
                         <th>Diterima Oleh</th>
-                        <th>Actions</th>
+                        <th class="not-export-col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -108,6 +122,7 @@
                     data: function (d) {
                         d.due_soon = $('#filter-due-soon').hasClass('btn-filter-active') ? 1 : 0;
                         d.late = $('#filter-late').hasClass('btn-filter-active') ? 1 : 0;
+                        d.status = $('#filter-status').val();
                     }
                 },
 
@@ -173,14 +188,40 @@
                     { targets: 10, width: '80px' },
                     
                 ],
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Laporan Peminjaman Barang Berkala'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Laporan Peminjaman Barang Berkala',
+                        orientation: 'landscape',
+                        exportOptions: {
+                        columns: function (idx, data, node) {
+                                // Return true for columns that should be exported
+                                return $(node).hasClass('not-export-col') ? false : true;
+                            }
+                        },
+                        customize: function (doc) {      
+                            doc.content.splice(0, 1, {
+                                text: [
+                                    { text: 'Laporan Peminjaman Barang Berkala\n', fontSize: 15, bold: true, alignment: 'center', margin: [0, 0, , 12] }
+                                ]
+                            });
+                        }
+                    },
+                    'csv', 'print'
+                ],
                 autoWidth: false, // Nonaktifkan autoWidth
 
-            // FixedColumns settings
-            "scrollX": true,
-            "scrollY": "400px",
-            "scrollCollapse": true,
-            "paging": true,
-            });
+                // FixedColumns settings
+                "scrollX": true,
+                "scrollY": "400px",
+                "scrollCollapse": true,
+                "paging": true,
+                });
 
              // Inisialisasi FixedColumns
             new $.fn.dataTable.FixedColumns(table, {
@@ -197,6 +238,10 @@
             $('#filter-late').on('click', function() {
                 $(this).toggleClass('btn-filter-active btn-filter-inactive');
                 $('#filter-due-soon').removeClass('btn-filter-active').addClass('btn-filter-inactive');
+                table.ajax.reload();
+            });
+
+            $('#filter-status').on('change', function() {
                 table.ajax.reload();
             });
 

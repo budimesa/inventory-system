@@ -6,7 +6,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Laporan Barang Berkala</h6>
     </div>
     <div class="card-body">        
-        <div class="row mb-3">
+        {{-- <div class="row mb-3">
             <div class="col-md-3">
                 <label for="start_date">Start Date</label>
                 <input type="text" id="start_date" class="form-control datepicker">
@@ -19,7 +19,7 @@
                 <button id="filter" class="btn btn-primary">Filter</button>
                 <button type="button" class="btn btn-secondary ml-2" id="reset_dates">Reset</button>
             </div>                
-        </div>
+        </div> --}}
         <div class="table-responsive">
             <table class="table table-bordered table-striped" id="table-item-reporting" width="100%" cellspacing="0">
                 <thead>
@@ -77,8 +77,8 @@
                 "ajax": {
                     "url": "{{ route('reporting.get-item-report') }}",
                     "data": function(d) {
-                        d.start_date = $('#start_date').val(); // Ambil nilai tanggal awal
-                        d.end_date = $('#end_date').val(); // Ambil nilai tanggal akhir
+                        // d.start_date = $('#start_date').val(); // Ambil nilai tanggal awal
+                        // d.end_date = $('#end_date').val(); // Ambil nilai tanggal akhir
                     }
                 },
 
@@ -139,27 +139,27 @@
             });
         });
 
-         // Filter button click event
-         $('#filter').click(function() {
-            var startDate = $('#start_date').val();
-            var endDate = $('#end_date').val();
+        // Filter button click event
+        //  $('#filter').click(function() {
+        //     var startDate = $('#start_date').val();
+        //     var endDate = $('#end_date').val();
 
-             if ((startDate && !endDate) || (!startDate && endDate)) {
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Info',
-                    text: 'Please select both start and end dates.'
-                });
-                return;
-            }
+        //      if ((startDate && !endDate) || (!startDate && endDate)) {
+        //         Swal.fire({
+        //             icon: 'info',
+        //             title: 'Info',
+        //             text: 'Please select both start and end dates.'
+        //         });
+        //         return;
+        //     }
 
-            table.draw();
-        });
+        //     table.draw();
+        // });
 
-        $('#reset_dates').click(function() {
-            $('#start_date').val(''); // Reset nilai Start Date
-            $('#end_date').val(''); // Reset nilai End Date
-            table.draw();
-        });
+        // $('#reset_dates').click(function() {
+        //     $('#start_date').val(''); // Reset nilai Start Date
+        //     $('#end_date').val(''); // Reset nilai End Date
+        //     table.draw();
+        // });
 </script>
 @endpush

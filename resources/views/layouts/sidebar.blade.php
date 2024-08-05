@@ -1,7 +1,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/home') }}">
         <div class="sidebar-brand-icon">
             <i class="fas fa-chart-bar"></i>
         </div>
@@ -10,7 +10,12 @@
 
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
-
+    <li class="nav-item active" @if(Request::is('home')) active @endif">
+        <a class="nav-link" href="{{ url('/home') }}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span></a>
+    </li>
+    <hr class="sidebar-divider">
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item @if(Request::is('asset_loans') || Request::is('problematic-items')) active @endif">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
@@ -57,8 +62,8 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Jenis Laporan :</h6>
                 <a class="collapse-item @if(Request::is('item-reporting')) active @endif" href="{{ url('/item-reporting') }}">Laporan Barang</a>
-                <a class="collapse-item @if(Request::is('incoming-reporting')) active @endif" href="{{ url('/incoming-reporting') }}">Laporan Barang Masuk</a>
-                <a class="collapse-item @if(Request::is('outgoing-reporting')) active @endif" href="{{ url('/outgoing-reporting') }}">Laporan Barang Keluar</a>                
+                {{-- <a class="collapse-item @if(Request::is('incoming-reporting')) active @endif" href="{{ url('/incoming-reporting') }}">Laporan Barang Masuk</a>
+                <a class="collapse-item @if(Request::is('outgoing-reporting')) active @endif" href="{{ url('/outgoing-reporting') }}">Laporan Barang Keluar</a>                 --}}
             </div>
         </div>
     </li>

@@ -15,6 +15,7 @@ use App\Http\Controllers\AssetLoanController;
 use App\Http\Controllers\ProblematicItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\ChangePasswordController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -110,4 +111,4 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Auth::routes();
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
