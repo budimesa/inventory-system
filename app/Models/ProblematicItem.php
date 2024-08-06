@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class ProblematicItem extends Model
 {
     use HasFactory;
-    protected $fillable = ['asset_loan_id', 'master_item_id', 'status', 'return_date', 'notes'];
+    protected $fillable = ['asset_loan_id', 'master_item_id', 'status', 'return_date', 'notes', 'received_by'];
 }

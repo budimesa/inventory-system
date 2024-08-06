@@ -203,22 +203,33 @@ class AssetLoanController extends Controller
         $originalItemIds = $AssetLoan->masterItems->pluck('id')->toArray();
         $returnedItemIds = $request->master_item_id;
 
-        foreach ($returnedItemIds as $itemId) {
-            $item = MasterItem::find($itemId);
-            $item->stock += 1;
-            $item->save();
+        if($returnedItemIds) {
+            foreach ($returnedItemIds as $itemId) {
+                $item = MasterItem::find($itemId);
+                $item->stock += 1;
+                $item->save();
+            }
 
-            // $AssetLoan->masterItems()->detach($itemId);
+            // Tangani item yang tidak dikembalikan
+            $notReturnedItemIds = array_diff($originalItemIds, $returnedItemIds);
+            foreach ($notReturnedItemIds as $itemId) {
+                ProblematicItem::updateOrCreate(
+                    ['asset_loan_id' => $AssetLoan->id, 'master_item_id' => $itemId],
+                    ['status' => 'not_returned']
+                );
+            }
+        }
+        else {
+            // Tangani item yang tidak dikembalikan
+            foreach ($originalItemIds as $itemId) {
+                ProblematicItem::updateOrCreate(
+                    ['asset_loan_id' => $AssetLoan->id, 'master_item_id' => $itemId],
+                    ['status' => 'not_returned']
+                );
+            }
         }
 
-        // Tangani item yang tidak dikembalikan
-        $notReturnedItemIds = array_diff($originalItemIds, $returnedItemIds);
-        foreach ($notReturnedItemIds as $itemId) {
-            ProblematicItem::updateOrCreate(
-                ['asset_loan_id' => $AssetLoan->id, 'master_item_id' => $itemId],
-                ['status' => 'not_returned']
-            );
-        }
+        
 
         return response()->json(['success' => 'Asset Loan updated successfully.']);
     }

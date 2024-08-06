@@ -32,7 +32,7 @@
                 </select>
             </div>
             <div class="col-md-2 align-self-end">
-                <button id="filter" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                <button id="filter" class="btn btn-primary" title="filter submit"><i class="fas fa-search"></i></button>
                 {{-- <button type="button" class="btn btn-secondary ml-1" id="reset_dates"><i class="fas fa-undo"></i></button> --}}
             </div>                
         </div>
@@ -49,6 +49,7 @@
                         <th>Status</th>
                         <th>Tanggal Pengembalian</th>
                         <th>Keterangan</th>
+                        <th>Diterima Oleh</th>
                         <th class="not-export-col">Actions</th>
                     </tr>
                 </thead>
@@ -142,6 +143,10 @@
                     {
                         data: 'notes',
                         name: 'notes',
+                    },
+                    {
+                        data: 'received_by',
+                        name: 'received_by',
                     },
                     {
                         data: 'action',

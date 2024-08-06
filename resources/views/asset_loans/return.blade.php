@@ -90,13 +90,7 @@
         setLoadingReturn(true);
         resetValidReturn();
 
-        if(return_master_item_id == "") {
-            validate('Barang wajib di isi!', 'warning');
-            $("input[name='return_master_item_id']").addClass('is-invalid');
-            setLoading(false);
-            return false;
-        }
-        else if(return_date == "") {
+        if(return_date == "") {
             validate('Tanggal Pengembalian wajib di isi!', 'warning');
             $("input[name='return_date']").addClass('is-invalid');
             setLoading(false);
@@ -111,6 +105,14 @@
         else {
             submitReturnForm();
         }
+
+        // if(return_master_item_id == "") {
+        //     validate('Barang wajib di isi!', 'warning');
+        //     $("input[name='return_master_item_id']").addClass('is-invalid');
+        //     setLoading(false);
+        //     return false;
+        // }
+        
     }
 
     function resetValidReturn() {
