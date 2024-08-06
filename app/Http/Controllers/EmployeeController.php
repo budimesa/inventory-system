@@ -11,9 +11,19 @@ class EmployeeController extends Controller
     public function index()
     {
         $employees = Employee::all();
-        $divisions = ['ACCOUNTING', 'ADM', 'AUDIT', 'DEPO SUPPORT', 'DIREKSI', 'DRIVER', 
-        'EXIM','FINANCE','HRD','IT','MARKETING', 'MESSENGER', 'MPD', 'NPD', 'OB',
-        'PAJAK','PURCHASING','SEKRETARIS'];
+        $divisions = ["Admin Marketing Pusat",
+                      "Finance & Accounting Pusat",
+                      "Purchasing",
+                      "HRD",
+                      "Exim",
+                      "Tax",
+                      "Umum Jakarta",
+                      "Sales & Marketing Pusat",
+                      "Sekretaris",
+                      "Mpd / D. G.",
+                      "Depo Support",
+                      "MIS",
+                      "Auditor"];
         return view('employees.index', compact('employees', 'divisions'));
     }
 
@@ -68,6 +78,8 @@ class EmployeeController extends Controller
             'employee_name' => $request->employee_name,
             'division'      => $request->division,
             'phone'         => $request->phone,
+            'email'         => $request->email,
+            'nik'           => $request->nik,
         ]);
 
         return response()->json(['success' => 'Berhasil']);
@@ -80,6 +92,8 @@ class EmployeeController extends Controller
             'employee_name' => $request->employee_name,
             'division'      => $request->division,
             'phone'         => $request->phone,
+            'nik'           => $request->nik,
+            'email'         => $request->email,
         ]);
 
         return response()->json(['success' => 'Berhasil']);

@@ -9,6 +9,7 @@ use App\Http\Controllers\AssetLoanController;
 use App\Http\Controllers\ProblematicItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\ChangePasswordController;
+use App\Http\Controllers\EmployeeImportController;
 use App\Http\Controllers\HomeController;
 
 /*
@@ -66,6 +67,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/change-password', [UserController::class, 'changePassword'])->name('change.password');
     Route::get('password/change', [ChangePasswordController::class, 'showChangePasswordForm'])->name('password.change');
     Route::post('password/change', [ChangePasswordController::class, 'changePassword'])->name('password.change.update');
+
+    Route::get('employees-import/import', [EmployeeImportController::class, 'showImportForm']);
+    Route::post('employees-import/import', [EmployeeImportController::class, 'import'])->name('employees.import');
+
 
 });
 

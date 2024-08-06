@@ -10,10 +10,12 @@
 
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
-    <li class="nav-item active" @if(Request::is('home')) active @endif">
+
+    <li class="nav-item @if(Request::is('home')) active @endif">
         <a class="nav-link" href="{{ url('/home') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span></a>
+            <span>Dashboard</span>
+        </a>
     </li>
     <hr class="sidebar-divider">
     <!-- Nav Item - Pages Collapse Menu -->
@@ -50,20 +52,10 @@
         </div>
     </li>
 
-    <!-- Nav Item - Reporting -->
-    <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages2" aria-expanded="true"
-            aria-controls="collapsePages2">
+    <li class="nav-item  @if(Request::is('item-reporting')) active @endif">
+        <a class="nav-link" href="{{ url('/item-reporting') }}">
             <i class="fas fa-chart-line"></i>
-            <span>Laporan Berkala</span>
-        </a>
-        <div id="collapsePages2" class="collapse @if(Request::is('item-reporting') || Request::is('incoming-reporting') || Request::is('outgoing-reporting')) show @endif" aria-labelledby="headingPages"
-            data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Jenis Laporan :</h6>
-                <a class="collapse-item @if(Request::is('item-reporting')) active @endif" href="{{ url('/item-reporting') }}">Laporan Barang</a>
-            </div>
-        </div>
+            <span>Laporan Barang</span></a>
     </li>
 
     <!-- Divider -->

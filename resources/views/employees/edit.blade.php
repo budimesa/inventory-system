@@ -12,8 +12,8 @@
                     <input type="text" name="employeeNameU" class="form-control" placeholder="">
                 </div>
                 <div class="form-group">
-                    <label for="name" class="form-label">Divisi <span class="text-danger">*</span></label>
-                    <select name="employeeDivisionU" class="form-control select2">
+                    <label for="divisionU" class="form-label">Divisi <span class="text-danger">*</span></label>
+                    <select name="divisionU" class="form-control select2">
                         <option value="" disabled selected>Pilih Divisi</option>
                         @foreach($divisions as $division)
                         <option value="{{ $division }}">{{ $division }}</option>
@@ -21,8 +21,16 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="name" class="form-label">No HP <span class="text-danger">*</span></label>
-                    <input type="text" name="employeePhone" class="form-control" placeholder="">
+                    <label for="phoneU" class="form-label">No HP <span class="text-danger">*</span></label>
+                    <input type="text" name="phoneU" class="form-control" placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="emailU" class="form-label">Email</label>
+                    <input type="email" name="emailU" class="form-control" placeholder="">
+                </div> 
+                <div class="form-group">
+                    <label for="nikU" class="form-label">NIK <span class="text-danger">*</span></label>
+                    <input type="text" name="nikU" class="form-control" placeholder="">
                 </div> 
             </div>
             <div class="modal-footer">
@@ -48,6 +56,8 @@
         const employeeName = $("input[name='employeeNameU']").val();
         const phone = $("input[name='phoneU']").val();
         const division = $("input[name='divisionU']").val();
+        const email = $("input[name='emailU']").val();
+        const nik = $("input[name='nikU']").val();
         setLoadingU(true);
         resetValidU();
 
@@ -79,15 +89,19 @@
         const employeeName = $("input[name='employeeNameU']").val();
         const division = $("select[name='divisionU']").val();
         const phone = $("input[name='phoneU']").val();
+        const email = $("input[name='emailU']").val();
+        const nik = $("input[name='nikU']").val();
         
         $.ajax({
             type: 'POST',
             url: `/update-employee/${id}`,
             enctype: 'multipart/form-data',
             data: {
-                name: employeeName,
+                employee_name: employeeName,
                 phone: phone,
                 division: division,
+                nik: nik,
+                email: email,
                 _token: "{{ csrf_token() }}"
             },
             success: function(data) {
@@ -108,6 +122,8 @@
         $("input[name='employeeNameU']").removeClass('is-invalid');
         $("input[name='divisionU']").removeClass('is-invalid');
         $("input[name='phoneU']").removeClass('is-invalid');
+        $("input[name='emailU']").removeClass('is-invalid');
+        $("input[name='nikU']").removeClass('is-invalid');
     };
 
     function resetU() {
@@ -116,6 +132,8 @@
         $("input[name='employeeNameU']").val('');
         $("select[name='divisionU']").val('');
         $("input[name='phoneU']").val('');
+        $("input[name='emailU']").val('');
+        $("input[name='nikU']").val('');
         setLoadingU(false);
     }
 

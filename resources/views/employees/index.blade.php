@@ -94,10 +94,12 @@
 
         $('#table-employees').on('click', '.btn-edit', function() {
             var editData = $(this).data('edit');
-            $("input[name='idEmployeesU']").val(editData.id);
+            $("input[name='idEmployeeU']").val(editData.id);
             $("input[name='employeeNameU']").val(editData.employee_name);
-            $("select[name='employeeDivisionU']").val(editData.division).trigger('change');
-            $("input[name='employeePhone']").val(editData.phone);
+            $("select[name='divisionU']").val(editData.division).trigger('change');
+            $("input[name='phoneU']").val(editData.phone);
+            $("input[name='emailU']").val(editData.email);
+            $("input[name='nikU']").val(editData.nik);
         });
 
         function destroy(data) {

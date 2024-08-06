@@ -26,7 +26,15 @@
                     <div class="form-group">
                         <label for="name" class="form-label">No HP <span class="text-danger">*</span></label>
                         <input type="text" name="phone" class="form-control" placeholder="">
-                    </div>          
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" placeholder="">
+                    </div> 
+                    <div class="form-group">
+                        <label for="nik" class="form-label">NIK <span class="text-danger">*</span></label>
+                        <input type="text" name="nik" class="form-control" placeholder="">
+                    </div>   
                 </form>
             </div>
             <div class="modal-footer">
@@ -54,6 +62,8 @@
             const employee_name = $("input[name='employee_name']").val();
             const division = $("select[name='division']").val();
             const phone = $("input[name='phone']").val();
+            const email = $("input[name='email']").val();
+            const nik = $("input[name='nik']").val();
             
             setLoading(true);
             resetValid();
@@ -87,6 +97,8 @@
             $("input[name='employee_name']").removeClass('is-invalid');
             $("select[name='division']").removeClass('is-invalid');
             $("input[name='phone']").removeClass('is-invalid');
+            $("input[name='email']").removeClass('is-invalid');
+            $("input[name='nik']").removeClass('is-invalid');
         }
 
         function resetForm() {
@@ -94,6 +106,8 @@
             $("input[name='employee_name']").val('');
             $("select[name='division']").val(null).trigger('change');
             $("input[name='phone']").val('');
+            $("input[name='email']").val('');
+            $("input[name='nik']").val('');
             setLoading(false);
         }
 
@@ -111,6 +125,8 @@
             const employee_name = $("input[name='employee_name']").val();  
             const division = $("select[name='division']").val();
             const phone = $("input[name='phone']").val();
+            const email = $("input[name='email']").val();
+            const nik = $("input[name='nik']").val();
             
             $.ajax({
                 type: 'POST',
@@ -120,6 +136,8 @@
                     employee_name: employee_name,    
                     division: division,
                     phone: phone,    
+                    nik: nik,
+                    email: email,
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(data) {
