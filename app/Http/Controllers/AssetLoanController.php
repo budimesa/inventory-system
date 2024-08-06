@@ -58,6 +58,9 @@ class AssetLoanController extends Controller
             if($request->date_type == 'borrow_date') {
                 $query->whereBetween('asset_loans.borrow_date', [$startDate, $endDate]);
             }
+            else if($request->date_type == 'planned_return_date'){
+                $query->whereBetween('asset_loans.planned_return_date', [$startDate, $endDate]);
+            }
             else {
                 $query->whereBetween('asset_loans.return_date', [$startDate, $endDate]);
             }

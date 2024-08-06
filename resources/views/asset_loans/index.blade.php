@@ -31,10 +31,11 @@
     </div>
     <div class="card-body">
         <div class="row mb-3">
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label for="date_type">Jenis Tanggal</label>
                 <select name="date_type" id="date_type" class="form-control">
                     <option value="borrow_date">Peminjaman</option>
+                    <option value="planned_return_date">Rencana Pengembalian</option>
                     <option value="return_date">Pengembalian</option>
                 </select>
             </div>
