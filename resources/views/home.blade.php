@@ -14,7 +14,7 @@
                     <div class="col-md-7">
                         <div class="card-body dashboard-card-body">
                             <h1 class="card-title">{{ $total_items }}</h1>
-                            <p class="card-text">Total Barang</p>
+                            <p class="card-text">Jenis Barang</p>
                         </div>
                     </div>
                     <div class="col-md-5 d-flex align-items-center justify-content-center">

@@ -46,7 +46,8 @@ class AssetLoanController extends Controller
         // Filter transaksi mendekati jatuh tempo
         if ($request->due_soon) {
             $query->where('planned_return_date', '>=', Carbon::now()->startOfDay())
-            ->where('planned_return_date', '<=', Carbon::now()->addDays(2)->endOfDay());
+            ->where('planned_return_date', '<=', Carbon::now()->addDays(2)->endOfDay())
+            ->whereNull('asset_loans.return_date');
         }
 
         if ($request->late) {
