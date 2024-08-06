@@ -42,7 +42,7 @@
         <div id="collapsePages3" class="collapse @if(Request::is('employees') || Request::is('master-items')) show @endif" aria-labelledby="headingPages"
             data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Master :</h6>
+                <h6 class="collapse-header">Jenis Master :</h6>
                 <a class="collapse-item @if(Request::is('employees')) active @endif" href="{{ url('/employees') }}">Master Karyawan</a>
                 <a class="collapse-item @if(Request::is('users')) active @endif" href="{{ url('/users') }}">Master User</a>
                 <a class="collapse-item @if(Request::is('master-items')) active @endif" href="{{ url('/master-items') }}">Master Barang</a>
@@ -62,8 +62,6 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Jenis Laporan :</h6>
                 <a class="collapse-item @if(Request::is('item-reporting')) active @endif" href="{{ url('/item-reporting') }}">Laporan Barang</a>
-                {{-- <a class="collapse-item @if(Request::is('incoming-reporting')) active @endif" href="{{ url('/incoming-reporting') }}">Laporan Barang Masuk</a>
-                <a class="collapse-item @if(Request::is('outgoing-reporting')) active @endif" href="{{ url('/outgoing-reporting') }}">Laporan Barang Keluar</a>                 --}}
             </div>
         </div>
     </li>

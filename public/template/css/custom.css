@@ -35,4 +35,25 @@
     background:#003366;
 }
 
-/* 4E3A2E */
+.due-soon-card {
+    background:#F57F17;
+}
+
+.late-card {
+    background:#FBC02D;
+}
+
+
+.btn-filter-active {
+    background-color: #ffc107 !important; /* Warna kuning untuk tombol aktif */
+    border-color:#f4b30d !important;
+    color: #fff;
+}
+
+.btn-filter-inactive {
+    background-color: #6c757d; /* Warna abu-abu untuk tombol non-aktif */
+    color: #fff;
+}
+.btn {
+    height: 38px;
+}

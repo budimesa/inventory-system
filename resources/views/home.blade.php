@@ -14,27 +14,11 @@
                     <div class="col-md-7">
                         <div class="card-body dashboard-card-body">
                             <h1 class="card-title">{{ $total_items }}</h1>
-                            <p class="card-text">Jenis Barang</p>
+                            <p class="card-text">Total Barang</p>
                         </div>
                     </div>
                     <div class="col-md-5 d-flex align-items-center justify-content-center">
                         <i class="dashboard-icon fas fa-box"></i>
-                    </div>
-                </div>
-            </div>
-          </div>
-          
-          <div class="col-sm-4">
-            <div class="card mb-3 problematic-items-card">
-                <div class="row no-gutters">
-                    <div class="col-md-7">
-                        <div class="card-body dashboard-card-body">
-                            <h1 class="card-title">{{ $total_problematic_items }}</h1>
-                            <p class="card-text">Barang Bermasalah</p>
-                        </div>
-                    </div>
-                    <div class="col-md-5 d-flex align-items-center justify-content-center">
-                        <i class="dashboard-icon fas fa-exclamation-triangle"></i>
                     </div>
                 </div>
             </div>
@@ -55,6 +39,22 @@
                 </div>
             </div>
           </div>
+          
+          <div class="col-sm-4">
+            <div class="card mb-3 problematic-items-card">
+                <div class="row no-gutters">
+                    <div class="col-md-7">
+                        <div class="card-body dashboard-card-body">
+                            <h1 class="card-title">{{ $total_problematic_items }}</h1>
+                            <p class="card-text">Barang Rusak/Hilang</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5 d-flex align-items-center justify-content-center">
+                        <i class="dashboard-icon fas fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+            </div>
+          </div>
 
           <div class="col-sm-4">
             <div class="card mb-3 employees-card">
@@ -67,6 +67,38 @@
                     </div>
                     <div class="col-md-5 d-flex align-items-center justify-content-center">
                         <i class="dashboard-icon fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          {{-- <div class="col-sm-4">
+            <div class="card mb-3 late-card">
+                <div class="row no-gutters">
+                    <div class="col-md-7">
+                        <div class="card-body dashboard-card-body">
+                            <h1 class="card-title">{{ $total_late }}</h1>
+                            <p class="card-text">Barang Terlambat </p>
+                        </div>
+                    </div>
+                    <div class="col-md-5 d-flex align-items-center justify-content-center">
+                        <i class="dashboard-icon fas fa-calendar-times"></i>
+                    </div>
+                </div>
+            </div>
+          </div> --}}
+
+          <div class="col-sm-4">
+            <div class="card mb-3 due-soon-card">
+                <div class="row no-gutters">
+                    <div class="col-md-7">
+                        <div class="card-body dashboard-card-body">
+                            <h1 class="card-title">{{ $total_due_soon }}</h1>
+                            <p class="card-text">Dekat Jatuh Tempo</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5 d-flex align-items-center justify-content-center">
+                        <i class="dashboard-icon fas fa-hourglass-half"></i>
                     </div>
                 </div>
             </div>

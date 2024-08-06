@@ -27,9 +27,11 @@ class AssetLoanController extends Controller
     public function getLoanList(Request $request)
     {
         if ($request->ajax()) {
+            $startDate = $request->start_date;
+            $endDate = $request->end_date;
 
             $query = AssetLoan::leftJoin('employees', 'asset_loans.employee_id', '=', 'employees.id')
-            ->select('asset_loans.*', 'employees.employee_name', 'employees.division')
+            ->select('asset_loans.*', 'employees.employee_name', 'employees.division' , 'employees.phone')
             ->with('masterItems') // Mendapatkan item yang berhubungan melalui pivot table
             ->orderBy('asset_loans.id', 'DESC');
 
@@ -49,6 +51,24 @@ class AssetLoanController extends Controller
 
         if ($request->late) {
             $query->where('planned_return_date', '<=', Carbon::now());
+        }
+
+        if ($startDate && $endDate) {
+            if($request->date_type == 'borrow_date') {
+                $query->whereBetween('asset_loans.borrow_date', [$startDate, $endDate]);
+            }
+            else {
+                $query->whereBetween('asset_loans.return_date', [$startDate, $endDate]);
+            }
+        }
+
+        if ($request->status) {
+            if($request->status == 'not_returned') {
+                $query->whereNull('asset_loans.return_date');
+            }
+            else {
+                $query->whereNotNull('asset_loans.return_date');
+            }
         }
 
         $data = $query->get();

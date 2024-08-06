@@ -21,17 +21,6 @@
     width: 100%;
 }
 
-.btn-filter-active {
-    background-color: #ffc107 !important; /* Warna kuning untuk tombol aktif */
-    border-color:#f4b30d !important;
-    color: #fff;
-}
-
-.btn-filter-inactive {
-    background-color: #6c757d; /* Warna abu-abu untuk tombol non-aktif */
-    color: #fff;
-}
-
 </style>
 @extends('layouts.app')
 
@@ -41,25 +30,41 @@
         <h6 class="m-0 font-weight-bold text-primary">Transaksi Peminjaman Barang</h6>
     </div>
     <div class="card-body">
-        <div>
-            {{-- <a class="modal-effect btn btn-primary mb-3" data-toggle="modal" data-target="#modalAdd">Tambah Transaksi Baru</a> --}}
-            <div class="row d-flex">
-                <div class="col-md-6">
-                    <a class="modal-effect btn btn-primary mb-3" data-toggle="modal" data-target="#modalAdd">Tambah Transaksi Baru</a>
-                </div>
-                <div class="col-md-3">
-                    <select name="filter-status" id="filter-status" class="form-control">
-                        <option value="">Semua</option>
-                        <option value="not_returned">Belum Dikembalikan</option>
-                        <option value="returned">Telah Dikembalikan</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <button id="filter-due-soon" class="btn btn-secondary mb-3"><i class="fas fa-filter  fa-xs mr-2"></i>Due Soon</button>
-                    <button id="filter-late" class="btn btn-secondary mb-3"><i class="fas fa-filter fa-xs mr-2"></i>Late</button>
-                </div>
+        <div class="row mb-3">
+            <div class="col-md-2">
+                <label for="date_type">Jenis Tanggal</label>
+                <select name="date_type" id="date_type" class="form-control">
+                    <option value="borrow_date">Peminjaman</option>
+                    <option value="return_date">Pengembalian</option>
+                </select>
             </div>
-        </div>        
+            <div class="col-md-2">
+                <label for="start_date">Start Date</label>
+                <input type="text" id="start_date" class="form-control datepicker">
+                <i class="calendar-icon"></i>
+            </div>
+            <div class="col-md-2">
+                <label for="end_date">End Date</label>
+                <input type="text" id="end_date" class="form-control datepicker">
+            </div>
+            <div class="col-md-3">
+                <label for="filter-status">Status</label>
+                <select name="filter-status" id="filter-status" class="form-control">
+                    <option value="">Semua</option>
+                    <option value="not_returned">Belum Dikembalikan</option>
+                    <option value="returned">Telah Dikembalikan</option>
+                </select>
+            </div>
+            <div class="col-md-2 align-self-end">
+                <button id="filter" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                <button id="filter-due-soon" class="btn btn-secondary" title="filter pengembalian dekat jatuh tempo"><i class="fas fa-hourglass-half"></i></button>
+                <button id="filter-late" class="btn btn-secondary" title="filter pengembalian terlambat"><i class="fas fa-calendar-times"></i></button>
+                {{-- <button type="button" class="btn btn-secondary ml-1" id="reset_dates"><i class="fas fa-undo"></i></button> --}}
+            </div>                
+        </div>
+        <div>
+            <a class="modal-effect btn btn-primary mb-3" data-toggle="modal" data-target="#modalAdd">Tambah Transaksi Baru</a>
+        </div>
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-fixed" id="table-loan" width="100%" cellspacing="0">
                 <thead>
@@ -67,6 +72,7 @@
                         <th>#</th>
                         <th>Nama Karyawan</th>
                         <th>Divisi</th>
+                        <th>Telepon</th>
                         <th>Nama Barang</th>
                         <th>Tanggal Pinjam</th>
                         <th>Rencana Tanggal Pengembalian</th>
@@ -93,6 +99,11 @@
 
 @push('scripts')
 <script>
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true
+        });
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -122,6 +133,9 @@
                     data: function (d) {
                         d.due_soon = $('#filter-due-soon').hasClass('btn-filter-active') ? 1 : 0;
                         d.late = $('#filter-late').hasClass('btn-filter-active') ? 1 : 0;
+                        d.date_type = $('#date_type').val();
+                        d.start_date = $('#start_date').val(); // Ambil nilai tanggal awal
+                        d.end_date = $('#end_date').val(); // Ambil nilai tanggal akhir
                         d.status = $('#filter-status').val();
                     }
                 },
@@ -138,6 +152,10 @@
                     {
                         data: 'division',
                         name: 'division',
+                    },
+                    {
+                        data: 'phone',
+                        name: 'phone',
                     },
                     {
                         data: 'item_details',
@@ -176,16 +194,17 @@
                 ],
                 columnDefs: [
                     { targets: 0, width: '30px' },
-                    { targets: 1, width: '200px' },
-                    { targets: 2, width: '200px' },
-                    { targets: 3, width: '200px' },
+                    { targets: 1, width: '150px' },
+                    { targets: 2, width: '100px' },
+                    { targets: 3, width: '150px' },
                     { targets: 4, width: '200px' },
                     { targets: 5, width: '200px' },
                     { targets: 6, width: '200px' },
                     { targets: 7, width: '200px' },
                     { targets: 8, width: '200px' },
                     { targets: 9, width: '200px' },
-                    { targets: 10, width: '80px' },
+                    { targets: 10, width: '120px' },
+                    { targets: 11, width: '80px' },
                     
                 ],
                 "dom": 'Bfrtip',
@@ -241,13 +260,26 @@
                 table.ajax.reload();
             });
 
-            $('#filter-status').on('change', function() {
-                table.ajax.reload();
-            });
-
             // Set initial class for the buttons
             $('#filter-due-soon').addClass('btn-filter-inactive');
             $('#filter-late').addClass('btn-filter-inactive');
+        });
+
+        $('#filter').click(function() {
+            var startDate = $('#start_date').val();
+            var endDate = $('#end_date').val();
+            var dateType = $('#date_type').val();
+
+             if ((startDate && !endDate) || (!startDate && endDate)) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Info',
+                    text: 'Please select both start and end dates.'
+                });
+                return;
+            }
+
+            table.draw();
         });
 
 

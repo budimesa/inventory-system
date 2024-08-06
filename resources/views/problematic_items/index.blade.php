@@ -7,19 +7,19 @@
     </div>
     <div class="card-body">
         <div class="row mb-3">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label for="date_type">Jenis Tanggal</label>
                 <select name="date_type" id="date_type" class="form-control">
                     <option value="borrow_date">Peminjaman</option>
                     <option value="return_date">Pengembalian</option>
                 </select>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label for="start_date">Start Date</label>
                 <input type="text" id="start_date" class="form-control datepicker">
                 <i class="calendar-icon"></i>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label for="end_date">End Date</label>
                 <input type="text" id="end_date" class="form-control datepicker">
             </div>
@@ -31,13 +31,11 @@
                     <option value="returned">Telah Dikembalikan</option>
                 </select>
             </div>
+            <div class="col-md-2 align-self-end">
+                <button id="filter" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                {{-- <button type="button" class="btn btn-secondary ml-1" id="reset_dates"><i class="fas fa-undo"></i></button> --}}
+            </div>                
         </div>
-        <div class="mb-3 d-flex">
-            <div class="ml-auto">
-                <button type="button" class="btn btn-secondary ml-1" id="reset_dates">Reset</button>
-                <button id="filter" class="btn btn-primary">Submit Filter</button>
-            </div>
-        </div>                
         <div class="table-responsive">
             <table class="table table-bordered table-striped" id="table-problematic-item" width="100%" cellspacing="0">
                 <thead>
