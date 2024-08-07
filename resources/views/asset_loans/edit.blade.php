@@ -17,8 +17,8 @@
                             <label for="editDivision" class="form-label">Divisi <span class="text-danger">*</span></label>
                             <select name="editDivision" id="editDivision" class="form-control select2">
                                 <option value="" disabled selected>Pilih Divisi</option>
-                                @foreach($divisions as $division)
-                                <option value="{{ $division->division }}">{{ $division->division }}</option>
+                                @foreach($divisions as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
                                 @endforeach
                             </select>
                         </div>

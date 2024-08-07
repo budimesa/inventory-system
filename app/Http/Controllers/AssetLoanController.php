@@ -17,9 +17,7 @@ class AssetLoanController extends Controller
     public function index()
     {
         $assetLoans = AssetLoan::all();
-        $divisions =  Employee::select('division', DB::raw('count(*) as total'))
-        ->groupBy('division')
-        ->get();
+        $divisions = Employee::getDivisions();
         $master_items = MasterItem::where('stock', '>', 0)->get();
         return view('asset_loans.index', compact('assetLoans', 'divisions', 'master_items'));
     }

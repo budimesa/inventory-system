@@ -14,8 +14,8 @@
                             <label for="division" class="form-label">Divisi <span class="text-danger">*</span></label>
                             <select name="division" id="division" class="form-control select2">
                                 <option value="" disabled selected>Pilih Divisi</option>
-                                @foreach($divisions as $division)
-                                <option value="{{ $division->division }}">{{ $division->division }}</option>
+                                @foreach($divisions as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -73,6 +73,7 @@
         });
         $('#division').change(function() {
             var division = $(this).val();
+            console.log(division)
             if(division) {
                 $.ajax({
                     url: '/employees-by-division/' + division,

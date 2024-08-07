@@ -292,7 +292,36 @@
             $('#editId').val(editData.id);
             $('#edit_borrow_date').val(editData.borrow_date);
             $('#edit_planned_return_date').val(editData.planned_return_date);
-            $('#editDivision').val(editData.division).trigger('change');
+            
+            // st
+
+            // Array asosiatif dari kunci ke nilai deskriptif di JavaScript
+            var divisions = {
+                'admin_marketing_pusat': 'Admin Marketing Pusat',
+                'finance_accounting_pusat': 'Finance & Accounting Pusat',
+                'purchasing': 'Purchasing',
+                'hrd': 'HRD',
+                'exim': 'Exim',
+                'tax': 'Tax',
+                'umum_jakarta': 'Umum Jakarta',
+                'sales_marketing_pusat': 'Sales & Marketing Pusat',
+                'sekretaris': 'Sekretaris',
+                'mpd_dg': 'Mpd / D. G.',
+                'depo_support': 'Depo Support',
+                'mis': 'MIS',
+                'auditor': 'Auditor'
+            };
+
+            // Function untuk mendapatkan kunci berdasarkan nilai deskriptif
+            function getKeyByValue(object, value) {
+                return Object.keys(object).find(key => object[key] === value);
+            }
+
+            // Mendapatkan kunci dari nilai deskriptif yang ada di editData
+            var divisionKey = getKeyByValue(divisions, editData.division);
+            // end
+
+            $('#editDivision').val(divisionKey).trigger('change');
             $('#employeeId').val(editData.employee_id);
             $('#edit_loan_reason').val(editData.loan_reason);
             $('#edit_master_item_id').val(selectedValues).trigger('change');

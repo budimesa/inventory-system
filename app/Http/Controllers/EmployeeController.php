@@ -9,21 +9,9 @@ use Yajra\DataTables\Facades\DataTables;
 class EmployeeController extends Controller
 {
     public function index()
-    {
+    { 
+        $divisions = Employee::getDivisions();
         $employees = Employee::all();
-        $divisions = ["Admin Marketing Pusat",
-                      "Finance & Accounting Pusat",
-                      "Purchasing",
-                      "HRD",
-                      "Exim",
-                      "Tax",
-                      "Umum Jakarta",
-                      "Sales & Marketing Pusat",
-                      "Sekretaris",
-                      "Mpd / D. G.",
-                      "Depo Support",
-                      "MIS",
-                      "Auditor"];
         return view('employees.index', compact('employees', 'divisions'));
     }
 
@@ -33,9 +21,15 @@ class EmployeeController extends Controller
         return response()->json($employees);
     }
 
-    public function getEmployeesByDivision($division)
+    public function getEmployeesByDivision($key)
     {
-        $employees = Employee::where('division', $division)->get();
+        $divisions = Employee::getDivisions();
+        if (!array_key_exists($key, $divisions)) {
+            return response()->json(['error' => 'Invalid division key'], 400);
+        }
+    
+        $value = $divisions[$key];
+        $employees = Employee::where('division', $value)->get();
         return response()->json($employees);
     }
 
