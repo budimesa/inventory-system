@@ -1,3 +1,25 @@
+<style>
+    .dataTables_wrapper .dataTables_scroll .dataTables_scrollBody {
+        overflow-x: auto;
+    }
+
+    .dataTables_wrapper .dataTables_scroll .dataTables_scrollBody table td:last-child,
+    .dataTables_wrapper .dataTables_scroll .dataTables_scrollBody table th:last-child {
+        position: sticky;
+        right: 0;
+        background-color: #fff;
+        z-index: 1;
+    }
+
+    .dataTables_wrapper {
+        overflow-x: hidden;
+    }
+
+    .table-fixed {
+        table-layout: fixed;
+        width: 100%;
+    }
+</style>
 @extends('layouts.app')
 
 @section('content')
@@ -155,6 +177,20 @@
                         searchable: false
                     },
                 ],
+                columnDefs: [
+                    { targets: 0, width: '30px' },
+                    { targets: 1, width: '150px' },
+                    { targets: 2, width: '100px' },
+                    { targets: 3, width: '150px' },
+                    { targets: 4, width: '200px' },
+                    { targets: 5, width: '200px' },
+                    { targets: 6, width: '200px' },
+                    { targets: 7, width: '200px' },
+                    { targets: 8, width: '200px' },
+                    { targets: 9, width: '200px' },
+                    { targets: 10, width: '60px' },
+                    
+                ],
                 "dom": 'Bfrtip',
                 "buttons": [
                     {
@@ -181,6 +217,16 @@
                     },
                     'csv', 'print'
                 ],
+                autoWidth: false, // Nonaktifkan autoWidth
+
+                // FixedColumns settings
+                "scrollX": true,
+                "scrollCollapse": true,
+                "paging": true,
+            });
+            new $.fn.dataTable.FixedColumns(table, {
+                leftColumns: 0, // Menentukan jumlah kolom yang akan tetap terlihat di sebelah kiri
+                rightColumns: 1 // Menentukan jumlah kolom yang akan tetap terlihat di sebelah kanan
             });
         });
 
@@ -194,7 +240,7 @@
             $('#return_borrow_date').val(returnData.borrow_date);
             $('#return_planned_return_date').val(returnData.planned_return_date);
             $('#return_loan_reason').val(returnData.loan_reason);
-            $('#item_name').val(returnData.item_name);
+            $('#item_name').val(returnData.item_name + ' - ' + returnData.item_type);
         });
 
         // function destroy(data) {

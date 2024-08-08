@@ -26,6 +26,10 @@
                         <label for="stock" class="form-label">Stock <span class="text-danger">*</span></label>
                         <input type="text" name="stock" class="form-control" placeholder="" id="stockInput">
                     </div>
+                    <div class="form-group">
+                        <label for="purchased_date" class="form-label">Tanggal Pembelian Barang <span class="text-danger">*</span></label>                        
+                        <input type="text" name="purchased_date" class="form-control datepicker" id="purchased_date" placeholder="">
+                    </div>                    
                 </form>
             </div>
             <div class="modal-footer">
@@ -43,6 +47,11 @@
 @section('addFormJS')
 <script>
     $(document).ready(function() {
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true
+        });
+
         $('#stockInput').on('input', function() {
             // Hanya biarkan karakter numerik dan hapus karakter yang tidak diinginkan
             $(this).val($(this).val().replace(/[^0-9]/g, ''));
@@ -54,6 +63,7 @@
         const item_type = $("input[name='item_type']").val();
         const stock = $("input[name='stock']").val();
         const description = $("input[name='description']").val();
+        const purchased_date = $("input[name='purchased_date']").val();
         setLoading(true);
         resetValid();
 
@@ -75,6 +85,12 @@
             setLoading(false);
             return false;
         }
+        else if (purchased_date == "") {
+            validate('Tanggal Pembelian wajib di isi!', 'warning');
+            $("input[name='purchased_date']").addClass('is-invalid');
+            setLoading(false);
+            return false;
+        }
         else {
             submitForm();
         }
@@ -85,6 +101,7 @@
         $("input[name='item_type']").removeClass('is-invalid');
         $("input[name='description']").removeClass('is-invalid');
         $("input[name='stock']").removeClass('is-invalid');
+        $("input[name='purchased_date']").removeClass('is-invalid');
     }
 
     function submitForm() {
@@ -92,7 +109,7 @@
         const item_type = $("input[name='item_type']").val();
         const description = $("textarea[name='description']").val();
         const stock = $("input[name='stock']").val();
-
+        const purchased_date = $("input[name='purchased_date']").val();
         $.ajax({
             type: 'POST',
             url: "{{ route('master-items.store') }}",
@@ -102,6 +119,7 @@
                 item_type: item_type,
                 description: description,
                 stock: stock,
+                purchased_date:purchased_date,
                 _token: "{{ csrf_token() }}"
             },
             success: function(data) {
@@ -133,6 +151,7 @@
         $("input[name='item_type']").val('');
         $("textarea[name='description']").val('');
         $("input[name='stock']").val('');
+        $("input[name='purchased_date']").val('');
         setLoading(false);
     }
 

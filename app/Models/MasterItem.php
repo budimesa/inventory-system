@@ -9,7 +9,7 @@ class MasterItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['item_type','item_name', 'description', 'stock'];
+    protected $fillable = ['item_type','item_name', 'description', 'stock', 'purchased_date'];
 
     public function assetLoans()
     {

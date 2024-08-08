@@ -70,6 +70,7 @@ class MasterItemController extends Controller
             'item_type'    => $request->item_type,            
             'description' => $request->description,
             'stock'   => $request->stock,
+            'purchased_date'   => $request->purchased_date,
         ]);
 
         return response()->json(['success' => 'Berhasil']);
@@ -96,6 +97,7 @@ class MasterItemController extends Controller
             'item_type'   => $request->item_type,
             'description' => $request->description,
             'stock'   => $request->stock,
+            'purchased_date'   => $request->purchased_date,
         ]);
 
         return response()->json(['success' => 'Berhasil']);

@@ -23,6 +23,10 @@
                     <label for="stockU" class="form-label">Stock <span class="text-danger">*</span></label>
                     <input type="text" name="stockU" class="form-control" placeholder="">
                 </div>
+                <div class="form-group">
+                        <label for="purchasedDateU" class="form-label">Tanggal Pembelian Barang <span class="text-danger">*</span></label>                        
+                        <input type="text" name="purchasedDateU" class="form-control datepicker" id="purchasedDateU" placeholder="">
+                    </div> 
             </div>
             <div class="modal-footer">
                 <button class="btn btn-success d-none" id="btnLoaderU" type="button" disabled="">
@@ -38,10 +42,17 @@
 
 @section('editFormJS')
 <script>
+    $(document).ready(function() {
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true
+        });
+    });
     function checkFormU() {
         const itemName = $("input[name='itemNameU']").val();
         const itemType = $("input[name='itemTypeU']").val();
         const stock = $("input[name='stockU']").val();
+        const purchased_date = $("input[name='purchasedDateU']").val();
         setLoadingU(true);
         resetValidU();
 
@@ -63,6 +74,13 @@
             setLoadingU(false);
             return false;
         }
+
+        else if (purchased_date == "") {
+            validate('Tanggal Pembelian wajib di isi!', 'warning');
+            $("input[name='purchased_dateU']").addClass('is-invalid');
+            setLoadingU(false);
+            return false;
+        }
         
         else {
             submitFormU();
@@ -75,6 +93,7 @@
         const itemType = $("input[name='itemTypeU']").val();
         const stock = $("input[name='stockU']").val();
         const description = $("textarea[name='descriptionU']").val();
+        const purchased_date = $("input[name='purchasedDateU']").val();
         
         $.ajax({
             type: 'POST',
@@ -85,6 +104,7 @@
                 item_type: itemType,
                 description: description,
                 stock: stock,
+                purchased_date: purchased_date,
                 _token: "{{ csrf_token() }}"
             },
             success: function(data) {
@@ -103,18 +123,20 @@
 
     function resetValidU() {
         $("input[name='itemNameU']").removeClass('is-invalid');
-        $("input[name='descriptionU']").removeClass('is-invalid');
+        $("textarea[name='descriptionU']").removeClass('is-invalid');
         $("input[name='item_codeU']").removeClass('is-invalid');
-        $("textarea[name='stockU']").removeClass('is-invalid');
+        $("input[name='stockU']").removeClass('is-invalid');
+        $("input[name='purchasedDateU']").removeClass('is-invalid');
     };
 
     function resetU() {
         resetValidU();
         $("input[name='idItemU']").val('');
         $("input[name='itemNameU']").val('');
-        $("input[name='descriptionU']").val('');
+        $("textarea[name='descriptionU']").val('');
         $("input[name='item_codeU']").val('');
-        $("textarea[name='stockU']").val('');
+        $("input[name='stockU']").val('');
+        $("input[name='purchasedDateU']").removeClass('is-invalid');
         setLoadingU(false);
     }
 

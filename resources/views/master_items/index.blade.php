@@ -18,6 +18,7 @@
                         <th>Jenis Barang</th>
                         <th>Deskripsi</th>
                         <th>Stock</th>
+                        <th>Tanggal Pembelian</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -85,6 +86,10 @@
                         name: 'stock',
                     },
                     {
+                        data: 'purchased_date',
+                        name: 'purchased_date',
+                    },
+                    {
                         data: 'action',
                         name: 'action',
                         orderable: false,
@@ -98,11 +103,11 @@
 
         $('#table-item').on('click', '.btn-edit', function() {
             var editData = $(this).data('edit');
-            console.log(editData)
             $("input[name='idItemU']").val(editData.id);
             $("input[name='itemNameU']").val(editData.item_name);            
             $("input[name='itemTypeU']").val(editData.item_type);
             $("input[name='stockU']").val(editData.stock);
+            $("input[name='purchasedDateU']").val(editData.purchased_date);
             $("textarea[name='descriptionU']").val(editData.description);
         });
 

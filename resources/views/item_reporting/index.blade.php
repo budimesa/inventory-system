@@ -28,6 +28,7 @@
                         <th>Nama Barang</th>
                         <th>Jenis Barang</th>                        
                         <th>Deskripsi</th>
+                        <th>Tangal Pembelian</th>
                         <th>Total Stock</th>
                         <th>Stock Terkini</th>
                         <th>Total Barang Dipinjam</th>
@@ -98,7 +99,11 @@
                     {
                         data: 'description',
                         name: 'description',
-                    },  
+                    }, 
+                    {
+                        data: 'purchased_date',
+                        name: 'purchased_date',
+                    }, 
                     {
                         data: 'total_stock',
                         name: 'total_stock',
